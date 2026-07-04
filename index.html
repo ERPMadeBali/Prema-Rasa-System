@@ -90,7 +90,7 @@
             }
 
             .card-custom {
-                background: #ffffff;
+                background: #c7c4c4;
                 border-radius: 20px;
                 padding: 20px;
                 margin-bottom: 20px;
@@ -128,7 +128,7 @@
             }
 
             .table {
-                color: white;
+                color: rgba(178, 247, 180, 0.862);
             }
 
             .menu-page {
@@ -494,7 +494,7 @@
                     <!-- MASTER DATA -->
                     <div id="masterdata" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-3">
+                            <h3 class="text-dark mb-3">
                                 <i class="fa-solid fa-database"></i>
                                 Master Data
                             </h3>
@@ -506,12 +506,12 @@
                     <!-- Forecast Produk -->
                     <div id="forecastproduk" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-3">
+                            <h3 class="text-dark mb-3">
                                 <i class="fa-solid fa-database"></i>
                                 Master Data
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-calculator"></i>
                                 Forecast Product / Recipe
                             </h5>
@@ -529,7 +529,7 @@
                             </div>
                             <hr>
                             <div class="row mt-3">
-                                <h5 class="text-warning mb-3">
+                                <h5 class="text-dark mb-3">
                                     Add Raw Materials
                                 </h5>
                                 <div class="col-md-4">
@@ -559,7 +559,7 @@
                             </div>
                             <table class="table table-light table-striped mt-4">
                                 <div class="text-end mt-3">
-                                    <h5 class="text-warning">
+                                    <h5 class="text-dark">
                                         Total Cost :
                                         <span id="priceForecaseTotal">Rp 0</span>
                                     </h5>
@@ -580,7 +580,7 @@
                             </button>
                         </div>
                         <hr>
-                        <h5 class="mt-4 text-warning">Data Forecast Product</h5>
+                        <h5 class="mt-4 text-dark">Data Forecast Product</h5>
                         <table class="table table-light table-striped mt-2">
                             <thead>
                                 <tr>
@@ -597,7 +597,7 @@
                     <div id="forecastdetail" class="menu-page">
                         <div class="card-custom">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="text-warning">
+                                <h3 class="text-dark">
                                     Detail Forecast Product
                                 </h3>
                                 <button class="btn btn-secondary" onclick="backForecast()">
@@ -607,7 +607,7 @@
                             </div>
                             <h4 id="forecastTitle"></h4>
                             <div class="text-end mt-3">
-                                <h4 class="text-warning">
+                                <h4 class="text-dark">
                                     Total Cost :
                                     <span id="forecastTotal"></span>
                                 </h4>
@@ -630,7 +630,7 @@
                     <div id="productioncogs" class="menu-page">
                         <div class="card-custom">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h3 class="text-warning">
+                                <h3 class="text-dark">
                                     COGS Production Report
                                 </h3>
                                 <button class="btn btn-secondary" onclick="backProduction()">
@@ -654,7 +654,7 @@
                                 <tbody id="productionCogsTable"></tbody>
                             </table>
                             <div class="text-end mt-3">
-                                <h4 class="text-warning">
+                                <h4 class="text-dark">
                                     Total Cost :
                                     <span id="productionCogsTotal"></span>
                                 </h4>
@@ -664,12 +664,12 @@
                     <!-- ================= PRICE FG ================= -->
                     <div id="pricefg" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-3">
+                            <h3 class="text-dark mb-3">
                                 <i class="fa-solid fa-database"></i>
                                 Master Data
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-tags"></i>
                                 Selling Price Product
                             </h5>
@@ -740,7 +740,7 @@
                                 </div>
                             </div>
                             <!-- TABLE -->
-                            <h5 class="mt-4 text-warning">Tabel Hpp & Selling Price Product</h5>
+                            <h5 class="mt-4 text-dark">Tabel Hpp & Selling Price Product</h5>
                             <table class="table table-light table-striped mt-4">
                                 <thead>
                                     <tr>
@@ -760,13 +760,13 @@
                     <!-- PURCHASING -->
                     <div id="purchasing" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-3">
+                            <h3 class="text-dark mb-3">
                                 <i class="fa-solid fa-cart-shopping"></i>
                                 Purchasing
                             </h3>
                             <div class="section-divider"></div>
                             <div class="section-subtitle">
-                                <h5 class="text-warning mb-3">
+                                <h5 class="text-dark mb-3">
                                     <i class="fa-solid fa-keyboard"></i>
                                     Input Purchase Order Raw Materials
                                 </h5>
@@ -817,7 +817,7 @@
                         </div>
                         <!-- TABLE -->
                         <div class="card-custom">
-                            <h4 class="text-warning mt-1">
+                            <h4 class="text-dark mt-1">
                                 Tabel Data Purchase Order Materials
                             </h4>
                             <div class="row mt-2">
@@ -846,7 +846,7 @@
                                 <div class="col-md-3">
                                     <label>Totals Purchase Value</label>
                                     <div class="px-3 py-2 border border-warning rounded">
-                                        <strong class="text-warning">
+                                        <strong class="text-dark">
                                             <span id="totalPurchaseAmount">Rp 0</span>
                                         </strong>
                                     </div>
@@ -875,12 +875,12 @@
                     <!-- ================= VIEW DATA PURCHASING ================= -->
                     <div id="purchasingView" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-3">
+                            <h3 class="text-dark mb-3">
                                 <i class="fa-solid fa-cart-shopping"></i>
                                 Purchasing
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-table"></i>
                                 Report Purchase Order Data
                             </h5>
@@ -938,12 +938,12 @@
                     <!-- INPUT DATA PRODUCTION MRP -->
                     <div id="produksi_input" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-industry"></i>
                                 Produkction MRP
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-layer-group"></i>
                                 Input Recipe Production
                             </h5>
@@ -970,10 +970,7 @@
                         </div>
                         <!-- LIST PRODUKSI -->
                         <div class="card-custom">
-                            <div class="row mt-1">
-                                <h5 class="text-warning mb-3">
-                                    Tabel Data Recipe Production
-                                </h5>
+                            <div class="row">
                                 <div class="col-md-3">
                                     <label>Month</label>
                                     <select id="productionMonth" class="form-control"
@@ -985,6 +982,11 @@
                                     <select id="productionYear" class="form-control"
                                         onchange="loadProductionListData()">
                                     </select>
+                                </div>
+                                <div class="row mt-1">
+                                    <h5 class="text-dark mb-3">
+                                        Tabel Data Recipe Production
+                                    </h5>
                                 </div>
                             </div>
                             <table class="table table-light table-striped">
@@ -1004,12 +1006,12 @@
                     <!-- INPUT HASIL PRODUKSI -->
                     <div id="produksi_hasil" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-industry"></i>
                                 Production MRP
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-boxes-packing"></i>
                                 Input Finish Good
                             </h5>
@@ -1038,7 +1040,9 @@
                                     </button>
                                 </div>
                             </div>
-                            <!-- FILTER -->
+                        </div>
+                        <!-- FILTER -->
+                        <div class="card-custom">
                             <div class="row mb-4">
                                 <div class="col-md-3">
                                     <label>Start Date</label>
@@ -1060,7 +1064,7 @@
                                 </div>
                             </div>
                             <div class="row mb-4">
-                                <h5 class="text-warning mb-3">
+                                <h5 class="text-dark mb-3">
                                     Tabel Data Finished Good Production
                                 </h5>
                             </div>
@@ -1084,7 +1088,7 @@
                     <div id="forecast_production" class="menu-page">
                         <div class="card-custom">
                             <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h3 class="text-warning" id="forecastProductionTitle">
+                                <h3 class="text-dark" id="forecastProductionTitle">
                                     Production Forecase
                                 </h3>
                                 <div class="col-md-2 d-flex align-items-end">
@@ -1113,7 +1117,7 @@
                             <!-- TOTAL -->
                             <div class="text-end mt-4">
 
-                                <h4 class="text-warning">
+                                <h4 class="text-dark">
                                     Total Forecast :
                                     <span id="forecastProductionTotal">
                                         Rp 0
@@ -1124,12 +1128,12 @@
                     </div>
                     <!-- ================= INPUT WASTE MENU ================= -->
                     <div id="input_waste" class="menu-page">
-                        <h3 class="text-warning mb-4">
+                        <h3 class="text-dark mb-4">
                             <i class="fa-solid fa-industry"></i>
                             Production MRP
                         </h3>
                         <div class="section-divider"></div>
-                        <h5 class="text-warning mb-3">
+                        <h5 class="text-dark mb-3">
                             <i class="fa-solid fa-trash-can me-2"></i>
                             INPUT DATA WASTE FG & RAW MATERIALS
                         </h5>
@@ -1151,12 +1155,12 @@
                     <!-- ================= WASTE FG PAGE ================= -->
                     <div id="produksi_waste_fg" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-trash-can me-2"></i>
                                 INPUT WASTE
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-box-open me-2"></i>
                                 Input Waste Finished Good
                             </h5>
@@ -1216,12 +1220,12 @@
                     <!-- ================= WASTE MATERIAL PAGE ================= -->
                     <div id="produksi_waste_bahan" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-trash-can me-2"></i>
                                 INPUT WASTE
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-boxes-stacked me-2"></i>
                                 Input Waste Raw Materials
                             </h5>
@@ -1298,12 +1302,12 @@
                     <!-- MARKETING MENU -->
                     <div id="marketing_toko" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-bullhorn"></i>
                                 Marketing
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-shop"></i>
                                 Input Data Store
                             </h5>
@@ -1346,12 +1350,12 @@
                     <!-- SALES FINISH GOOD -->
                     <div id="salesFinishGood" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-bullhorn"></i>
                                 Marketing
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-box-open me-2"></i>
                                 Input Sales finished Good
                             </h5>
@@ -1397,7 +1401,7 @@
                             <hr>
                             <!-- TABEL DATA SALES FG -->
                             <div class="row mt-3">
-                                <h5 class="text-warning mt-3">
+                                <h5 class="text-dark mt-3">
                                     Report Data Sales Finished Good
                                 </h5>
                                 <div class="col-md-3">
@@ -1413,7 +1417,7 @@
                                 <div class="col-md-3">
                                     <label>Totals Sales FG Value</label>
                                     <div class="px-3 py-2 border border-warning rounded">
-                                        <strong class="text-warning">
+                                        <strong class="text-dark">
                                             <span id="salesFGTotal">Rp 0</span>
                                         </strong>
                                     </div>
@@ -1440,12 +1444,12 @@
                     <!-- INPUT DATA SALES VALUE -->
                     <div id="marketing_sales" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-bullhorn"></i>
                                 Marketing
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-file-invoice-dollar"></i>
                                 Input Sales Value
                             </h5>
@@ -1469,7 +1473,7 @@
                             </button>
                             <hr>
                             <!-- REPORT SECTION HARUS MASIH DI DALAM CARD -->
-                            <h5 class="text-warning mt-4">
+                            <h5 class="text-dark mt-4">
                                 Tabel Report Data Sales Value
                             </h5>
                             <div class="row mt-3">
@@ -1484,7 +1488,7 @@
                                 <div class="col-md-3">
                                     <label>Totals Sales Value</label>
                                     <div class="px-3 py-2 border border-warning rounded">
-                                        <strong class="text-warning">
+                                        <strong class="text-dark">
                                             <span id="salesTotal">Rp 0</span>
                                         </strong>
                                     </div>
@@ -1506,12 +1510,12 @@
                     </div> <!-- SUMMARY TABEL DATA SALES VALUE -->
                     <div id="marketing_report" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-bullhorn"></i>
                                 Marketing
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-chart-column me-2"></i>
                                 Summary Report Sales
                             </h5>
@@ -1558,12 +1562,12 @@
                     <!-- ==== COST PRODUCTION ============ -->
                     <div id="productioncost" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-coins"></i>
                                 Accounting
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-money-bill-wave"></i>
                                 Input Cost Production
                             </h5>
@@ -1677,7 +1681,7 @@
                             </table>
                             <!-- TOTAL -->
                             <div class="text-end mb-4">
-                                <h4 class="text-warning">
+                                <h4 class="text-dark">
                                     Total Cost Overhead :
                                     <span id="costTotal">
                                         Rp 0
@@ -1690,7 +1694,7 @@
                             </button>
                             <!-- REPORT -->
                             <hr class="mt-5 mb-4">
-                            <h4 class="text-warning mb-3">
+                            <h4 class="text-dark mb-3">
                                 Report Cost Production
                             </h4>
                             <div class="row mb-3">
@@ -1719,7 +1723,7 @@
                                 </tbody>
                             </table>
                             <div class="text-end">
-                                <h4 class="text-warning">
+                                <h4 class="text-dark">
                                     Total Cost :
                                     <span id="productionCostGrandTotal">
                                         Rp 0
@@ -1731,12 +1735,12 @@
                     <!-- ==== PROFIT & LOSS ============ -->
                     <div id="profitloss" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-coins"></i>
                                 Accounting
                             </h3>
                             <div class="section-divider"></div>
-                            <h5 class="text-warning mb-3">
+                            <h5 class="text-dark mb-3">
                                 <i class="fa-solid fa-scale-balanced me-2"></i>
                                 Profit and Loss Summary Report.
                             </h5>
@@ -1801,7 +1805,7 @@
                     <!-- ================= ACCOUNTING REPORT MENU ================= -->
                     <div id="accounting_report" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-4">
+                            <h3 class="text-dark mb-4">
                                 <i class="fa-solid fa-file-lines"></i>
                                 Accounting Report
                             </h3>
@@ -1831,7 +1835,7 @@
                     <div id="report_detail" class="menu-page" style="display:none;">
                         <div class="card-custom">
                             <!-- TITLE -->
-                            <h3 id="reportTitle" class="text-warning mb-4">
+                            <h3 id="reportTitle" class="text-dark mb-4">
                                 Report Detail
                             </h3>
                             <div class="section-divider"></div>
@@ -1862,7 +1866,7 @@
                                 </div>
                                 <!-- TABLE -->
                                 <div id="generalReportArea">
-                                    <h5 id="reportSubTitle" class="text-warning mb-3"></h5>
+                                    <h5 id="reportSubTitle" class="text-dark mb-3"></h5>
                                     <table class="table table-light table-striped">
                                         <thead id="reportHead"></thead>
                                         <tbody id="reportBody"></tbody>
@@ -1870,7 +1874,7 @@
                                 </div>
                                 <!-- TABLE REPORT PRODUCTION-->
                                 <div id="productionReportArea" style="display:none;">
-                                    <h5 class="text-warning">Finished Goods Production</h5>
+                                    <h5 class="text-dark">Finished Goods Production</h5>
                                     <table id="productionFGExportTable" class="table table-light table-striped">
                                         <thead>
                                             <tr>
@@ -1883,7 +1887,7 @@
                                         </thead>
                                         <tbody id="productionFGTable"></tbody>
                                     </table>
-                                    <h5 class="text-warning mt-4">Material Usage</h5>
+                                    <h5 class="text-dark mt-4">Material Usage</h5>
                                     <table id="productionMaterialExportTable" class="table table-light table-striped">
                                         <thead>
                                             <tr>
@@ -1901,7 +1905,7 @@
                             </div>
                             <!-- ================= COGS REPORT ================= -->
                             <div id="cogsReportArea" style="display:none;">
-                                <h5 class="text-warning">
+                                <h5 class="text-dark">
                                     Usage Material COGS Qty
                                 </h5>
                                 <table id="cogsQtyExportTable" class="table table-light table-striped">
@@ -1923,7 +1927,7 @@
                                     <tbody id="cogsQtyTable">
                                     </tbody>
                                 </table>
-                                <h5 class="text-warning">
+                                <h5 class="text-dark">
                                     Usage Material COGS Value
                                 </h5>
                                 <table id="cogsValueExportTable" class="table table-light table-striped">
@@ -1988,7 +1992,7 @@
                                     </h5>
                                 </div>
                                 <div class="col-md-6 text-end">
-                                    <h5 class="text-warning">
+                                    <h5 class="text-dark">
                                         Total Data :
                                         <span id="stockAwalTotalData">
                                             0
@@ -2042,7 +2046,7 @@
                     <!-- ================= UPLOAD STOCK OPNAME ================= -->
                     <div id="uploadSO" class="menu-page">
                         <div class="card-custom">
-                            <h3 class="text-warning mb-3">
+                            <h3 class="text-dark mb-3">
                                 <i class="fa-solid fa-boxes-stacked"></i>
                                 Upload Stock Opname
                             </h3>
@@ -2107,7 +2111,7 @@
                             <!-- TOTAL -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <h5 class="text-warning">
+                                    <h5 class="text-dark">
                                         Total Value :
                                         <span id="soTotalValue">
                                             Rp 0
@@ -2175,7 +2179,7 @@
                             <!-- SUMMARY -->
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <h5 class="text-warning">
+                                    <h5 class="text-dark">
                                         Difference Value :
                                         <span id="stockCardTotalValue">
                                             Rp 0
@@ -2351,7 +2355,7 @@
 
                                 if (type === "satuan") {
                                     html = `
-        <h5 class="mb-3 text-warning">
+        <h5 class="mb-3 text-dark">
           <i class="fa-solid fa-sliders"></i>
             Unit Master Data
         </h5>
@@ -2394,7 +2398,7 @@
                                 /* ================= SUPPLIER ================= */
                                 if (type === "supplier") {
                                     html = `
-        <h5 class="mb-3 text-warning">
+        <h5 class="mb-3 text-dark">
             <i class="fa-solid fa-truck"></i>
             Master Data Supplier
         </h5>
@@ -2449,7 +2453,7 @@
                                 /* ================= BAHAN BAKU ================= */
                                 if (type === "bahan") {
                                     html = `
-        <h5 class="mb-3 text-warning">
+        <h5 class="mb-3 text-dark">
              <i class="fa-solid fa-boxes-stacked"></i>     
             Master of Raw Materials
                 </h5>
@@ -4181,7 +4185,7 @@
                                 if (type === "input") {
                                     targetId = "produksi_input";
                                     document.getElementById(targetId).innerHTML = `
-            <h4 class="text-warning">Input Produksi</h4>
+            <h4 class="text-dark">Input Produksi</h4>
 
             <div class="row">
                 <div class="col-md-4">
@@ -8182,7 +8186,7 @@
                     <td>${qtyProduksi.toLocaleString()} </td>
                     <td>${qtyWaste.toLocaleString()}</td>                  
                     <td class="text-info fw-bold"> ${qtyStockAkhir.toLocaleString()}</td>
-                    <td class="text-warning fw-bold">${qtySOAkhir.toLocaleString()} </td>
+                    <td class="text-dark fw-bold">${qtySOAkhir.toLocaleString()} </td>
 
                     <td class="
                         ${qtySelisih !== 0
