@@ -658,29 +658,41 @@
                                     Back
                                 </button>
                             </div>
-                            <!-- TABLE FORECAST -->
-                            <table class="table table-light table-striped">
+                            <!-- TABLE FINISHED GOODS HASIL PRODUKSI -->
+                            <table id="finishedGoodsForecastTable" class="table table-light table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Materials Code</th>
-                                        <th>Materials Name</th>
-                                        <th>UOM</th>
-                                        <th>Weight</th>
-                                        <th>Price</th>
+                                        <th>Product Code</th>
+                                        <th>Product Name</th>
+                                        <th>FG PCS</th>
+                                        <th>FG BOX</th>
+                                        <th>Production Date</th>
                                     </tr>
                                 </thead>
-                                <tbody id="forecastProductionTable"></tbody>
+                                <tbody id="productionForecastTable"></tbody>
                             </table>
-                            <!-- TOTAL -->
-                            <div class="text-end mt-4">
-
-                                <h4 class="text-dark">
-                                    Total Forecast :
-                                    <span id="forecastProductionTotal">
-                                        Rp 0
-                                    </span>
-                                </h4>
-                            </div>
+                        </div>
+                        <!-- TABLE MATERIAL FORECAST -->
+                        <table id="materialForecastTable" class="table table-light table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Materials Code</th>
+                                    <th>Materials Name</th>
+                                    <th>UOM</th>
+                                    <th>Weight</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="forecastProductionTable"></tbody>
+                        </table>
+                        <!-- TOTAL -->
+                        <div class="text-end mt-4">
+                            <h4 class="text-dark">
+                                Total Forecast :
+                                <span id="forecastProductionTotal">
+                                    Rp 0
+                                </span>
+                            </h4>
                         </div>
                     </div>
                     <!-- ================= INPUT WASTE MENU ================= -->
@@ -703,7 +715,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- ================= WASTE FG PAGE ================= -->
                     <div id="produksi_waste_fg" class="menu-page">
                         <div class="card-custom">
@@ -769,7 +780,6 @@
                             </button>
                         </div>
                     </div>
-
                     <!-- MARKETING MENU -->
                     <div id="marketing_toko" class="menu-page">
                         <div class="card-custom">
@@ -1092,7 +1102,6 @@
                                         <tbody id="reportBody"></tbody>
                                     </table>
                                 </div>
-
                                 <!-- TABLE REPORT PRODUCTION-->
                                 <div id="productionReportArea" style="display:none;">
                                     <h5 class="text-dark">Finished Goods Production</h5>
@@ -3164,146 +3173,27 @@
 
                                 let targetId = "";
 
-                                /* ================= INPUT PRODUKSI ================= */
-                                if (type === "input") {
-                                    targetId = "produksi_input";
-                                    document.getElementById(targetId).innerHTML = `
-            <h4 class="text-dark">Input Produksi</h4>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <label>Produk</label>
-                    <select id="prodProduct" class="form-control"></select>
-                </div>
-
-                <div class="col-md-3">
-                    <label>Qty Produksi</label>
-                    <input type="number" id="prodQty" class="form-control">
-                </div>
-
-                <div class="col-md-3">
-                    <label>Tanggal</label>
-                    <input type="date" id="prodDate" class="form-control">
-                </div>
-
-                <div class="col-md-2 d-flex align-items-end">
-                    <button class="btn btn-warning w-100" onclick="saveProduction()">
-                        Simpan
-                    </button>
-                </div>
-            </div>
-        `;
-
-                                    requestAnimationFrame(() => {
-                                        loadProductionProducts();
-
-                                        initProductionFilter();
-
-                                        const select = document.getElementById("produksi_input");
-                                        if (select) select.innerHTML = html;
-                                        loadProductionList();
-                                    });
-                                }
-                                /* ================= HASIL PRODUKSI ================= */
-                                if (type === "hasil") {
-
-                                    targetId = "produksi_hasil";
-
-                                    document.getElementById(targetId).innerHTML = `
-            <h4>Hasil Produksi</h4>
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label>Produk</label>
-                    <select id="resProduct" class="form-control"></select>
-                </div>
-                <div class="col-md-2">
-                    <label>FG PCS</label>
-                    <input type="number" id="resFgPcs" class="form-control">
-                </div>
-                <div class="col-md-2">
-                    <label>FG BOX</label>
-                    <input type="number" id="resFgBox" class="form-control">
-                </div>
-                <div class="col-md-3">
-                    <label>Tanggal</label>
-                    <input type="date" id="resDate" class="form-control">
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <button class="btn btn-warning w-100" onclick="saveProductionResult()">
-                        Save
-                    </button>
-                </div>
-            </div>
-
-            <table class="table table-light table-striped">
-                <thead>
-                    <tr>
-                        <th>Kode Produk</th>
-                        <th>Nama Produk</th>
-                        <th>FG PCS</th>
-                        <th>FG BOX</th>
-                        <th>Tanggal</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="productionResultList"></tbody>
-            </table>
-        `;
-
-                                    setTimeout(async () => {
-                                        await loadProductionOrdersToResultSelect();
-                                        await loadProductionResult();
-                                    }, 150);
-                                }
-
                                 /* ================= WASTE FG ================= */
                                 if (type === "waste_fg") {
                                     targetId = "produksi_waste_fg";
                                     document.getElementById(targetId).innerHTML = `
-            <h4>Waste Finished Goods</h4>
-            <table class="table table-light table-striped">
-                <thead>
-                    <tr>
-                        <th>Produk</th>
-                        <th>Qty Waste</th>
-                        <th>Keterangan</th>
-                    </tr>
-                </thead>
-                <tbody id="wasteFGList"></tbody>
-            </table>
-        `;
+                                    <h4>Waste Finished Goods</h4>
+                                    <table class="table table-light table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Produk</th>
+                                                <th>Qty Waste</th>
+                                                <th>Keterangan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="wasteFGList"></tbody>
+                                    </table>
+                                `;
 
                                     loadWasteFG();
                                 }
 
-                                /* ================= WASTE BAHAN ================= */
-                                if (type === "waste_bahan") {
-
-                                    targetId = "produksi_waste_bahan";
-
-                                    document.getElementById(targetId).innerHTML = `
-            <h4>Waste Bahan Baku</h4>
-
-            <table class="table table-light table-striped">
-                <thead>
-                    <tr>
-                        <th>Bahan</th>
-                        <th>Qty Waste</th>
-                        <th>Supplier</th>
-                        <th>Keterangan</th>
-                    </tr>
-                </thead>
-                <tbody id="wasteMaterialList"></tbody>
-            </table>
-        `;
-
-                                    loadWasteMaterial();
-                                }
-
-                                document.getElementById(targetId).style.display = "block";
-                                showPage("produksi");
                             }
-
 
                             /* ================= DROPDOWN PRODUK ================= */
                             async function loadProductionProducts() {
@@ -3584,9 +3474,11 @@
                             async function loadProductionResult() {
                                 const start = document.getElementById("prodStartDate").value;
                                 const end = document.getElementById("prodEndDate").value;
-                                const snap = await getDocs(
-                                    query(collection(db, "production_results"))
+                                const q = query(
+                                    collection(db, "production_results"),
+                                    orderBy("date", "asc")
                                 );
+                                const snap = await getDocs(q);
 
                                 let data = [];
                                 snap.forEach(d => {
@@ -3738,14 +3630,18 @@
 
                                 showPage("forecast_production");
 
-                                const prodSnap = await getDocs(collection(db, "production_results"));
                                 const recipeSnap = await getDocs(collection(dbRead, "product_recipes"));
                                 const materialSnap = await getDocs(collection(dbRead, "materials"));
                                 const priceFgSnap = await getDocs(collection(dbRead, "price_fg"));
+                                const q = query(
+                                    collection(db, "production_results"),
+                                    orderBy("date", "asc")
+                                );
 
-
-
+                                const prodSnap = await getDocs(q);
                                 const materialMap = {};
+                                let fgHtml = "";
+
                                 const startDate = parseDate(start);
                                 const endDate = parseDate(end);
 
@@ -3754,8 +3650,25 @@
                                     const p = prod.data();
                                     const itemDate = parseDate(p.date);
 
+                                    // Filter tanggal
                                     if (itemDate < startDate || itemDate > endDate) return;
 
+                                    // ==========================
+                                    // TABEL FINISHED GOODS
+                                    // ==========================
+                                    fgHtml += `
+        <tr>
+            <td>${p.productCode}</td>
+            <td>${p.productName}</td>
+            <td>${Number(p.fgPcs).toLocaleString()}</td>
+            <td>${Number(p.fgBox).toLocaleString()}</td>
+            <td>${new Date(p.date).toLocaleDateString("id-ID")}</td>
+        </tr>
+        `;
+
+                                    // ==========================
+                                    // HITUNG MATERIAL RECIPE
+                                    // ==========================
                                     recipeSnap.forEach(recipe => {
 
                                         const r = recipe.data();
@@ -3795,26 +3708,39 @@
                                         materialMap[key].price += price;
                                     });
 
-                                    // ===============================
-                                    // TAMBAHAN PEMAKAIAN BOX
-                                    // ===============================
+                                    // ==========================
+                                    // HITUNG PEMAKAIAN BOX
+                                    // ==========================
                                     const productCode = String(p.productCode || "").trim();
                                     const fgBox = Number(p.fgBox || 0);
+
                                     priceFgSnap.forEach(priceDoc => {
 
                                         const priceData = priceDoc.data();
+
                                         if (
-                                            String(priceData.productCode || "").trim()
-                                            !==
-                                            productCode
+                                            String(priceData.productCode || "").trim() !== productCode
                                         ) return;
 
                                         const boxName = String(priceData.materialName || "").trim();
-                                        const boxMaterial = materialSnap.docs.map(m => m.data()).find(m => String(m.name).trim().toLowerCase() === boxName.toLowerCase());
+
+                                        const boxMaterial = materialSnap.docs
+                                            .map(m => m.data())
+                                            .find(m =>
+                                                String(m.name).trim().toLowerCase() ===
+                                                boxName.toLowerCase()
+                                            );
+
                                         if (!boxMaterial) return;
+
                                         const key = boxMaterial.code;
+
                                         const weight = fgBox;
-                                        const price = weight * Number(boxMaterial.average || 0);
+
+                                        const price =
+                                            weight *
+                                            Number(boxMaterial.average || 0);
+
                                         if (!materialMap[key]) {
                                             materialMap[key] = {
                                                 code: boxMaterial.code,
@@ -3822,16 +3748,23 @@
                                                 unit: boxMaterial.unit,
                                                 weight: 0,
                                                 price: 0
-
                                             };
-
                                         }
 
                                         materialMap[key].weight += weight;
                                         materialMap[key].price += price;
                                     });
+
                                 });
 
+                                // ==========================
+                                // TAMPILKAN TABEL FG
+                                // ==========================
+                                document.getElementById("productionForecastTable").innerHTML = fgHtml;
+
+                                // ==========================
+                                // TABEL MATERIAL
+                                // ==========================
                                 forecastProductionData = Object.values(materialMap);
                                 forecastProductionData.sort((a, b) =>
                                     a.code.localeCompare(b.code)
@@ -3839,37 +3772,32 @@
 
                                 let html = "";
                                 let grandTotal = 0;
-
                                 forecastProductionData.forEach(item => {
+
                                     grandTotal += item.price;
 
                                     html += `
-<tr>
-    <td>${item.code}</td>
-    <td>${item.name}</td>
-    <td>${item.unit}</td>
-    <td>${item.weight.toLocaleString()}</td>
-    <td>Rp ${item.price.toLocaleString()}</td>
-</tr>
-`;
+        <tr>
+            <td>${item.code}</td>
+            <td>${item.name}</td>
+            <td>${item.unit}</td>
+            <td>${item.weight.toLocaleString()}</td>
+            <td>Rp ${item.price.toLocaleString()}</td>
+        </tr>
+        `;
                                 });
 
                                 document.getElementById("forecastProductionTitle").innerHTML =
                                     `Forecast Produksi Bulan ${formatBulan(start)}`;
+
                                 document.getElementById("forecastProductionTable").innerHTML = html;
                                 document.getElementById("forecastProductionTotal").innerHTML =
                                     `Rp ${grandTotal.toLocaleString()}`;
                             }
 
                             window.viewForecastProduction = viewForecastProduction;
-
                             /* ================= EXPORT PDF ================= */
                             async function exportForecastPDF() {
-                                if (forecastProductionData.length === 0) {
-                                    alert("Data forecast kosong");
-                                    return;
-                                }
-
                                 const { jsPDF } = window.jspdf;
                                 const doc = new jsPDF("landscape", "pt", "a4");
                                 const start = document.getElementById("prodStartDate").value;
@@ -3877,45 +3805,63 @@
                                     "Januari", "Februari", "Maret", "April", "Mei", "Juni",
                                     "Juli", "Agustus", "September", "Oktober", "November", "Desember"
                                 ];
-
                                 const [y, m] = start.split("-");
                                 const bulan = `${bulanNama[parseInt(m) - 1]} ${y}`;
                                 doc.setFontSize(16);
-                                doc.text(`Forecast Produksi Bulan ${bulan}`, 40, 40);
-                                let total = 0;
-                                const rows = forecastProductionData.map(item => {
-
-                                    total += item.price;
-
-                                    return [
-                                        item.code,
-                                        item.name,
-                                        item.unit,
-                                        item.weight.toLocaleString(),
-                                        "Rp " + item.price.toLocaleString()
-                                    ];
-                                });
-
+                                doc.text(
+                                    `Forecast Produksi Bulan ${bulan}`,
+                                    40,
+                                    40
+                                );
+                                // ==========================
+                                // EXPORT TABEL FINISHED GOODS
+                                // ==========================
+                                doc.setFontSize(12);
+                                doc.text(
+                                    "Finished Goods Production",
+                                    40,
+                                    70
+                                );
                                 doc.autoTable({
-                                    startY: 60,
-                                    head: [[
-                                        "Kode Bahan",
-                                        "Nama Bahan",
-                                        "UOM",
-                                        "Weight",
-                                        "Price"
-                                    ]],
-                                    body: rows
+                                    html: "#finishedGoodsForecastTable",
+                                    startY: 85,
+                                    theme: "grid",
+                                    headStyles: {
+                                        fillColor: [52, 58, 64]
+                                    }
+                                });
+                                // ==========================
+                                // EXPORT TABEL MATERIAL
+                                // ==========================
+                                let nextY = doc.lastAutoTable.finalY + 40;
+                                doc.text(
+                                    "Material Forecast",
+                                    40,
+                                    nextY
+                                );
+                                doc.autoTable({
+                                    html: "#materialForecastTable",
+                                    startY: nextY + 15,
+                                    theme: "grid",
+                                    headStyles: {
+                                        fillColor: [52, 58, 64]
+                                    }
                                 });
 
+                                // ==========================
+                                // TOTAL
+                                // ==========================
+                                const totalText =
+                                    document.getElementById("forecastProductionTotal").innerText;
                                 doc.setFontSize(14);
                                 doc.text(
-                                    `Total Forecast : Rp ${total.toLocaleString()}`,
+                                    `Total Forecast : ${totalText}`,
                                     40,
                                     doc.lastAutoTable.finalY + 30
                                 );
-
-                                doc.save(`Forecast-Produksi-${bulan}.pdf`);
+                                doc.save(
+                                    `Forecast-Produksi-${bulan}.pdf`
+                                );
                             }
                             window.exportForecastPDF = exportForecastPDF;
 
