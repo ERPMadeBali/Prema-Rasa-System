@@ -85,7 +85,7 @@
 
             .card-custom {
                 background: #c7c4c4;
-                border-radius: 20px;
+                border-radius: 10px;
                 padding: 20px;
                 margin-bottom: 20px;
             }
@@ -492,13 +492,7 @@
                         </div>
                         <!-- LIST PRODUKSI -->
                         <div class="card-custom">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label>Month</label>
-                                    <select id="productionMonth" class="form-control"
-                                        onchange="loadProductionListData()">
-                                    </select>
-                                </div>
+                            <div class="row align-items-end mb-3">
                                 <div class="col-md-3">
                                     <label>Year</label>
                                     <select id="productionYear" class="form-control"
@@ -673,26 +667,29 @@
                             </table>
                         </div>
                         <!-- TABLE MATERIAL FORECAST -->
-                        <table id="materialForecastTable" class="table table-light table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Materials Code</th>
-                                    <th>Materials Name</th>
-                                    <th>UOM</th>
-                                    <th>Weight</th>
-                                    <th>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody id="forecastProductionTable"></tbody>
-                        </table>
-                        <!-- TOTAL -->
-                        <div class="text-end mt-4">
-                            <h4 class="text-dark">
-                                Total Forecast :
-                                <span id="forecastProductionTotal">
-                                    Rp 0
-                                </span>
-                            </h4>
+                        <div class="card-custom mt-4">
+                            <h5 class="mb-3">Material Forecast Production</h5>
+                            <table id="materialForecastTable" class="table table-light table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Materials Code</th>
+                                        <th>Materials Name</th>
+                                        <th>UOM</th>
+                                        <th>Weight</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="forecastProductionTable"></tbody>
+                            </table>
+                            <!-- TOTAL -->
+                            <div class="text-end mt-4">
+                                <h4 class="text-dark">
+                                    Total Forecast :
+                                    <span id="forecastProductionTotal">
+                                        Rp 0
+                                    </span>
+                                </h4>
+                            </div>
                         </div>
                     </div>
                     <!-- ================= INPUT WASTE MENU ================= -->
@@ -881,44 +878,44 @@
                             </button>
                             <hr>
                             <!-- TABEL DATA SALES FG -->
-                            <div class="row mt-3">
-                                <h5 class="text-dark mt-3">
-                                    Report Data Sales Finished Good
+                            <div class="mt-4">
+                                <h5 class="text-dark mb-3">
+                                    Finished Goods Sales Data Report
                                 </h5>
-                                <div class="col-md-3">
-                                    <label>Bulan</label>
-                                    <select id="salesFGMonth" class="form-control" onchange="loadSalesFGTable()">
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label>Tahun</label>
-                                    <select id="salesFGYear" class="form-control" onchange="loadSalesFGTable()">
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label>Totals Sales FG Value</label>
-                                    <div class="px-3 py-2 border border-warning rounded">
-                                        <strong class="text-dark">
+                                <div class="row align-items-end mb-3">
+                                    <div class="col-md-3">
+                                        <label>Month</label>
+                                        <select id="salesFGMonth" class="form-control" onchange="loadSalesFGTable()">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Year</label>
+                                        <select id="salesFGYear" class="form-control" onchange="loadSalesFGTable()">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Total Sales FG Value</label>
+                                        <div class="form-control bg-warning-subtle fw-bold">
                                             <span id="salesFGTotal">Rp 0</span>
-                                        </strong>
+                                        </div>
                                     </div>
                                 </div>
-                                <table class="table table-light table-striped mt-3">
-                                    <thead>
-                                        <tr>
-                                            <th>Store Code</th>
-                                            <th>Store Name</th>
-                                            <th>Product</th>
-                                            <th>Qty Box</th>
-                                            <th>Qty PCS</th>
-                                            <th>Price</th>
-                                            <th>Totals</th>
-                                            <th>Sales Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="salesFGList"></tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-light table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Qty Box</th>
+                                                <th>Qty PCS</th>
+                                                <th>Price</th>
+                                                <th>Total</th>
+                                                <th>Sales Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="salesFGList"></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -935,6 +932,7 @@
                                 Input Sales Value
                             </h5>
                             <div class="section-divider"></div>
+                            <!-- INPUT -->
                             <div class="row">
                                 <div class="col-md-4">
                                     <label>Toko</label>
@@ -953,42 +951,39 @@
                                 Save Sales
                             </button>
                             <hr>
-                            <!-- REPORT SECTION HARUS MASIH DI DALAM CARD -->
-                            <h5 class="text-dark mt-4">
-                                Tabel Report Data Sales Value
+                            <h5 class="text-dark mb-3">
+                                Sales Value Data Report Table
                             </h5>
-                            <div class="row mt-3">
+                            <!-- FILTER -->
+                            <div class="row align-items-end mb-3">
                                 <div class="col-md-3">
-                                    <label>Bulan</label>
-                                    <select id="salesMonth" class="form-control" onchange="loadSalesTable()"></select>
+                                    <label>Year</label>
+                                    <select id="salesYear" class="form-control" onchange="loadSalesTable()">
+                                    </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label>Tahun</label>
-                                    <select id="salesYear" class="form-control" onchange="loadSalesTable()"></select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label>Totals Sales Value</label>
-                                    <div class="px-3 py-2 border border-warning rounded">
-                                        <strong class="text-dark">
-                                            <span id="salesTotal">Rp 0</span>
-                                        </strong>
+                                    <label>Total Sales Value</label>
+                                    <div class="form-control bg-warning-subtle fw-bold">
+                                        <span id="salesTotal">Rp 0</span>
                                     </div>
                                 </div>
                             </div>
-                            <table class="table table-light table-striped mt-3">
+                            <!-- TABEL -->
+                            <table class="table table-light table-striped">
                                 <thead>
                                     <tr>
                                         <th>Store Code</th>
                                         <th>Store Name</th>
                                         <th>Sales Value</th>
                                         <th>Sales Date</th>
-                                        <th>Action</th>
+                                        <th width="120">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="salesList"></tbody>
                             </table>
                         </div>
-                    </div> <!-- SUMMARY TABEL DATA SALES VALUE -->
+                    </div>
+                    <!-- SUMMARY TABEL DATA SALES VALUE -->
                     <div id="marketing_report" class="menu-page">
                         <div class="card-custom">
                             <h3 class="text-dark mb-4">
@@ -1030,7 +1025,7 @@
                                     <tr>
                                         <th>Store Code</th>
                                         <th>Store Name</th>
-                                        <th>Sales</th>
+                                        <th>Sales Value</th>
                                         <th>Sales Date</th>
                                     </tr>
                                 </thead>
@@ -3248,31 +3243,29 @@
                                 document.getElementById("prodQty").value = "";
                             }
 
-
                             /* ================= LIST PRODUKSI ================= */
                             async function loadProductionListData() {
-                                const selectedMonth = parseInt(document.getElementById("productionMonth").value);
+
                                 const selectedYear = parseInt(document.getElementById("productionYear").value);
                                 const snap = await getDocs(collection(db, "production_orders"));
-
                                 let data = [];
 
-                                snap.forEach(d => {
-                                    data.push({ id: d.id, ...d.data() });
+                                snap.forEach(doc => {
+                                    data.push({
+                                        id: doc.id,
+                                        ...doc.data()
+                                    });
                                 });
 
-                                let html = "";
+                                data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
+                                let html = "";
                                 data.forEach(d => {
 
                                     const dateObj = new Date(d.date);
-                                    const month = dateObj.getMonth() + 1;
                                     const year = dateObj.getFullYear();
 
-                                    // 🔥 FILTER BULAN + TAHUN
-                                    if (month !== selectedMonth || year !== selectedYear) {
-                                        return;
-                                    }
+                                    if (year !== selectedYear) return;
 
                                     html += `
         <tr>
@@ -3285,45 +3278,30 @@
                     onclick="deleteProduction('${d.id}')">
                     Hapus
                 </button>
-                
+
                 <button class="btn btn-info btn-sm"
-                onclick="viewProductionDetail('${d.productCode}','${d.productName}',${d.qtyProduction})">
+                    onclick="viewProductionDetail('${d.productCode}','${d.productName}',${d.qtyProduction})">
                     Detail
                 </button>
             </td>
         </tr>
-    `;
+        `;
                                 });
-                                const el = document.getElementById("productionList");
-                                if (el) el.innerHTML = html;
+
+                                document.getElementById("productionList").innerHTML = html;
                             }
 
                             function initProductionFilter() {
-                                const now = new Date();
 
-                                const monthSelect = document.getElementById("productionMonth");
                                 const yearSelect = document.getElementById("productionYear");
 
-                                const months = [
-                                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                                ];
-
-                                let mHtml = "";
-                                months.forEach((m, i) => {
-                                    mHtml += `<option value="${i + 1}">${m}</option>`;
-                                });
-
-                                monthSelect.innerHTML = mHtml;
-                                monthSelect.value = now.getMonth() + 1;
-
-                                let yHtml = "";
+                                let html = "";
 
                                 for (let y = 2025; y <= 2075; y++) {
-                                    yHtml += `<option value="${y}">${y}</option>`;
+                                    html += `<option value="${y}">${y}</option>`;
                                 }
 
-                                yearSelect.innerHTML = yHtml;
+                                yearSelect.innerHTML = html;
                                 yearSelect.value = new Date().getFullYear();
                             }
 
@@ -4357,8 +4335,6 @@
 
                                     html += `
 <tr>
-    <td>${d.store}</td>
-    <td>${storeMap[d.store] || "-"}</td>
     <td>${d.productName}</td>
     <td>${d.qtyBox}</td>
     <td>${d.qtyPcs}</td>
@@ -4466,61 +4442,61 @@
                                     createdAt: serverTimestamp()
                                 });
 
+                                document.getElementById("salesValue").value = "";
+                                document.getElementById("salesDate").value = "";
+
                                 alert("Sales berhasil disimpan");
 
                                 await loadSalesTable();
                                 await loadSalesDashboard();
                                 await loadDashboardSales();
 
-                                document.getElementById("salesValue").value = "";
-                                document.getElementById("salesDate").value = "";
                             }
 
                             /* LOAD SALES TABLE (INPUT PAGE) */
                             async function loadSalesTable() {
-
-                                const selectedMonth = parseInt(document.getElementById("salesMonth").value);
                                 const selectedYear = parseInt(document.getElementById("salesYear").value);
                                 const snap = await getDocs(collection(db, "sales"));
 
                                 let data = [];
+
                                 snap.forEach(d => {
-                                    data.push({ id: d.id, ...d.data() });
+                                    data.push({
+                                        id: d.id,
+                                        ...d.data()
+                                    });
                                 });
 
-                                data.sort((a, b) => {
-                                    const numA = parseInt(a.storeCode.replace("ST", "")) || 0;
-                                    const numB = parseInt(b.storeCode.replace("ST", "")) || 0;
-                                    return numA - numB;
-                                });
+                                // Urutkan berdasarkan tanggal paling lama
+                                data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
                                 let html = "";
                                 let totalSales = 0;
+
                                 data.forEach(d => {
 
-                                    const dateObj = new Date(d.date);
-                                    const month = dateObj.getMonth() + 1;
-                                    const year = dateObj.getFullYear();
+                                    const year = new Date(d.date).getFullYear();
 
-                                    if (month !== selectedMonth || year !== selectedYear) {
-                                        return;
-                                    }
+                                    // Filter hanya tahun
+                                    if (year !== selectedYear) return;
 
                                     totalSales += Number(d.value);
 
+                                    data.sort((a, b) => new Date(a.date) - new Date(b.date));
+
                                     html += `
-<tr>
-    <td>${d.storeCode}</td>
-    <td>${d.storeName}</td>
-    <td>Rp ${Number(d.value).toLocaleString()}</td>
-    <td>${d.date}</td>
-    <td>
-        <button class="btn btn-danger btn-sm w-100"
-            onclick="deleteSales('${d.id}')">
-            Hapus
-        </button>
-    </td>
-</tr>`;
+        <tr>
+            <td>${d.storeCode}</td>
+            <td>${d.storeName}</td>
+            <td>Rp ${Number(d.value).toLocaleString()}</td>
+            <td>${d.date}</td>
+            <td>
+                <button class="btn btn-danger btn-sm w-100"
+                    onclick="deleteSales('${d.id}')">
+                    Hapus
+                </button>
+            </td>
+        </tr>`;
                                 });
 
                                 document.getElementById("salesList").innerHTML = html;
@@ -4530,31 +4506,16 @@
                             }
 
                             function initSalesFilter() {
-                                const now = new Date();
 
-                                const monthSelect = document.getElementById("salesMonth");
                                 const yearSelect = document.getElementById("salesYear");
 
-                                const months = [
-                                    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                                    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                                ];
-
-                                let mHtml = "";
-                                months.forEach((m, i) => {
-                                    mHtml += `<option value="${i + 1}">${m}</option>`;
-                                });
-
-                                monthSelect.innerHTML = mHtml;
-                                monthSelect.value = now.getMonth() + 1;
-
-                                let yHtml = "";
+                                let html = "";
 
                                 for (let y = 2025; y <= 2075; y++) {
-                                    yHtml += `<option value="${y}">${y}</option>`;
+                                    html += `<option value="${y}">${y}</option>`;
                                 }
 
-                                yearSelect.innerHTML = yHtml;
+                                yearSelect.innerHTML = html;
                                 yearSelect.value = new Date().getFullYear();
                             }
 
@@ -4592,11 +4553,7 @@
                                     data.push({ id: d.id, ...d.data() });
                                 });
 
-                                data.sort((a, b) => {
-                                    const numA = parseInt(a.storeCode.replace("ST", "")) || 0;
-                                    const numB = parseInt(b.storeCode.replace("ST", "")) || 0;
-                                    return numA - numB;
-                                });
+                                data.sort((a, b) => new Date(a.date) - new Date(b.date));
 
                                 let html = "";
                                 let total = 0;
@@ -5617,7 +5574,7 @@
                                     },
                                     options: {
                                         responsive: true,
-                                        cutout: 0,   // 🔥 INI PENTING: pastikan bukan doughnut
+                                        cutout: 0,
                                         plugins: {
                                             legend: { display: true },
                                             tooltip: {
