@@ -3256,7 +3256,7 @@
     <td>${r.material}</td>
     <td>${qty}</td>
     <td>${r.unit}</td>
-    <td>Rp ${totalPrice.toLocaleString()}</td>
+    <td>Rp ${formatNumber(totalPrice || 0)}</td>
 </tr>
 `
                                         });
@@ -3272,7 +3272,7 @@
 
                                 document.getElementById("forecastDetailTable").innerHTML = html;
                                 document.getElementById("forecastTotal").innerHTML =
-                                    `Rp ${grandTotal.toLocaleString()}`;
+                                    `Rp ${formatNumber(grandTotal || 0)}`;
                             }
 
                             function backForecast() {
