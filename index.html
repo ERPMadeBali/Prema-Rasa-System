@@ -642,12 +642,6 @@
                                 </thead>
                                 <tbody id="productionCogsTable"></tbody>
                             </table>
-                            <div class="text-end mt-3">
-                                <h4 class="text-dark">
-                                    Total Cost :
-                                    <span id="productionCogsTotal"></span>
-                                </h4>
-                            </div>
                         </div>
                     </div>
                     <!-- ================= PRICE FG ================= -->
@@ -1119,15 +1113,6 @@
                                 </thead>
                                 <tbody id="forecastProductionTable"></tbody>
                             </table>
-                            <!-- TOTAL -->
-                            <div class="text-end mt-4">
-                                <h4 class="text-dark">
-                                    Total Forecast :
-                                    <span id="forecastProductionTotal">
-                                        Rp 0
-                                    </span>
-                                </h4>
-                            </div>
                         </div>
                     </div>
                     <!-- ================= INPUT WASTE MENU ================= -->
@@ -2225,7 +2210,7 @@
 
                             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
                             import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-                            import { getFirestore, collection, onSnapshot, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+                            import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
                             const firebaseConfig1 = {
                                 apiKey: "AIzaSyCqmojmZagGLMpxpemlhf3L0u42lShW6NM",
@@ -2300,6 +2285,24 @@
                             let recipeItems = [];
                             let forecastSource = "forecast";
                             let loginAttempt = 0;
+
+                            // =====================================================
+                            // GLOBAL NUMBER FORMAT
+                            // =====================================================
+                            function formatNumber(value) {
+                                return Number(value).toLocaleString("id-ID", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                });
+                            }
+
+                            function parseNumberID(value) {
+                                return Number(
+                                    String(value)
+                                        .replace(/\./g, "")
+                                        .replace(",", ".")
+                                ) || 0;
+                            }
 
                             /* ================= LOGIN ================= */
                             async function login() {
@@ -2844,15 +2847,9 @@
         <td>${d.data().code}</td>
         <td>${d.data().name}</td>
         <td>${d.data().unit}</td>
-        <td>
-            ${Number(d.data().weight).toLocaleString()}
-        </td>
-        <td>
-            Rp ${Number(d.data().price).toLocaleString()}
-        </td>
-        <td>
-            Rp ${Number(d.data().average).toLocaleString()}
-        </td>
+        <td> ${formatNumber(d.data().weight || 0)}</td>
+        <td>Rp ${formatNumber(d.data().price || 0)}</td>
+        <td>Rp ${formatNumber(d.data().average || 0)}</td>
         <td width="120">
             <button
                 class="btn btn-danger btn-sm w-100"
@@ -3150,7 +3147,7 @@
         <td>${product.code}</td>
         <td>${product.name}</td>
         <td>${count} bahan</td>
-        <td>Rp ${totalCost.toLocaleString()}</td>
+        <td>Rp ${formatNumber(totalCost)}</td>
         <td>
             <button class="btn btn-info btn-sm"
                 onclick="viewForecast('${product.code}')">
@@ -3292,6 +3289,15 @@
 
                             /* ================= OPEN PAGE ================= */
                             async function showPriceProduct() {
+                                /* ========LOCK ACCESS INPUT DATA========== */
+                                const user = auth.currentUser;
+                                if (!user) return;
+                                const username = user.email.split("@")[0].toLowerCase().trim();
+                                if (username !== "user") {
+                                    alert("You do not have access to Master Data!");
+                                    return;
+                                }
+
                                 showPage("pricefg");
                                 await loadPriceFGProducts();
                                 await loadPriceFGMaterials();
@@ -3399,6 +3405,7 @@
                                     document.getElementById("priceFgProduct").value;
                                 const materialSelect =
                                     document.getElementById("priceFgMaterial");
+
                                 let forecastHpp = 0;
                                 if (productCode) {
                                     const recipeSnap =
@@ -3429,7 +3436,8 @@
                                     });
                                 }
 
-                                document.getElementById("priceFgForecastHpp").value = forecastHpp.toLocaleString();
+                                document.getElementById("priceFgForecastHpp").value = formatNumber(forecastHpp);
+
                                 let materialPrice = 0;
                                 if (materialSelect.value) {
                                     const selected =
@@ -3441,10 +3449,16 @@
                                             selected.getAttribute("data-price")
                                         ) || 0;
                                 }
-                                document.getElementById("priceFgMaterialPrice").value = materialPrice.toLocaleString();
+
+                                document.getElementById("priceFgMaterialPrice").value = formatNumber(materialPrice);
+
                                 const qtyPerBox = Number(document.getElementById("priceFgQtyBox").value) || 0;
-                                const forecastBox = forecastHpp * qtyPerBox; document.getElementById("priceFgForecastBox").value = forecastBox.toLocaleString();
+                                const forecastBox = forecastHpp * qtyPerBox;
+
+                                document.getElementById("priceFgForecastBox").value = formatNumber(forecastBox);
+
                                 let plasticPrice = 0;
+
                                 const plasticSelect = document.getElementById("priceFgPlastic");
                                 if (plasticSelect && plasticSelect.value) {
                                     const selected =
@@ -3457,17 +3471,18 @@
                                         ) || 0;
                                 }
 
-                                document.getElementById("priceFgPlasticPrice").value = plasticPrice.toLocaleString();
+                                document.getElementById("priceFgPlasticPrice").value = formatNumber(plasticPrice);
+
                                 const totalHpp = forecastBox + materialPrice + plasticPrice;
-                                document.getElementById("priceFgTotalHpp").value = totalHpp.toLocaleString();
+                                document.getElementById("priceFgTotalHpp").value = formatNumber(totalHpp);
                             }
 
                             /* ================= SAVE PRICE ================= */
                             async function savePriceFG() {
                                 const productCode = document.getElementById("priceFgProduct").value;
-                                const qtyPerBox = Number(document.getElementById("priceFgQtyBox").value);
-                                const price = Number(document.getElementById("priceFgPrice").value);
-                                const priceStore = Number(document.getElementById("priceFgPriceStore").value);
+                                const qtyPerBox = parseNumberID(document.getElementById("priceFgQtyBox").value);
+                                const price = parseNumberID(document.getElementById("priceFgPrice").value);
+                                const priceStore = parseNumberID(document.getElementById("priceFgPriceStore").value);
                                 const materialSelect = document.getElementById("priceFgMaterial");
                                 const materialName =
                                     materialSelect.value
@@ -3500,17 +3515,8 @@
                                         )
                                         : 0;
 
-                                const hppForecast =
-                                    Number(
-                                        document.getElementById("priceFgForecastHpp")
-                                            .value.replace(/,/g, "")
-                                    ) || 0;
-                                const hppTotal =
-                                    Number(
-                                        document.getElementById("priceFgTotalHpp")
-                                            .value.replace(/,/g, "")
-                                    ) || 0;
-
+                                const hppForecast = parseNumberID(document.getElementById("priceFgForecastHpp").value);
+                                const hppTotal = parseNumberID(document.getElementById("priceFgTotalHpp").value);
                                 if (
                                     !productCode ||
                                     !qtyPerBox ||
@@ -3605,7 +3611,9 @@
                                         orderBy("productCode", "asc")
                                     )
                                 );
+
                                 let html = "";
+
                                 snap.forEach(d => {
                                     const data = d.data();
                                     html += `
@@ -3613,9 +3621,9 @@
                             <td>${data.productCode}</td>
                             <td>${data.productName}</td>
                             <td>${data.qtyPerBox}</td>
-                            <td> Rp ${Number(data.hppTotal || 0).toLocaleString()} </td>
-                            <td> Rp ${Number(data.price || 0).toLocaleString()} </td>
-                            <td> Rp ${Number(data.priceStore || 0).toLocaleString()} </td>
+                            <td> Rp ${formatNumber(data.hppTotal || 0)} </td>
+                            <td> Rp ${formatNumber(data.price || 0)} </td>
+                            <td> Rp ${formatNumber(data.priceStore || 0)} </td>
                             <td width="120">
                                 <button
                                     class="btn btn-danger btn-sm w-100"
@@ -3847,8 +3855,8 @@
         <td>${item.materialName}</td>
         <td>${qty}</td>
         <td>${item.unit}</td>
-        <td>Rp ${price.toLocaleString("id-ID")}</td>
-        <td>Rp ${average.toLocaleString("id-ID")}</td>
+        <td>Rp ${formatNumber(price)}</td>
+        <td>Rp ${formatNumber(average)}</td>
         <td>${item.supplier}</td>
         <td>${item.date}</td>
         <td>
@@ -3865,7 +3873,7 @@
                                     html || "<tr><td colspan='9'>Tidak ada data</td></tr>";
 
                                 document.getElementById("totalPurchaseAmount").innerHTML =
-                                    `Rp ${totalPurchasePrice.toLocaleString("id-ID")}`;
+                                    `Rp ${formatNumber(totalPurchasePrice)}`;
                             }
 
                             /* ================= DELETE ================= */
@@ -4489,8 +4497,10 @@
 
                                 let html = "";
                                 let grandTotal = 0;
+
                                 materialSnap.forEach(m => {
                                     const material = m.data();
+
                                     const recipe = recipeSnap.docs
                                         .map(r => r.data())
                                         .find(r =>
@@ -4499,6 +4509,7 @@
                                         );
 
                                     if (!recipe) return;
+
                                     const recipeQty = Number(recipe.qty);
                                     const materialPrice = Number(material.average);
                                     const totalMaterialQty = recipeQty * qtyProd;
@@ -4507,21 +4518,58 @@
                                     grandTotal += totalCost;
 
                                     html += `
-                <tr>
-                    <td>${material.code}</td>
-                    <td>${material.name}</td>
-                    <td>${material.unit || "-"}</td>
-                    <td>${recipeQty}</td>
-                    <td>${materialPrice.toLocaleString()}</td>
-                    <td>${totalMaterialQty}</td>
-                    <td>${totalCost.toLocaleString()}</td>
-                </tr>
-                `;
+    <tr>
+        <td>${material.code}</td>
+        <td>${material.name}</td>
+        <td>${material.unit || "-"}</td>
+        <td>${recipeQty}</td>
+        <td>Rp ${formatNumber(materialPrice)}</td>
+        <td>${formatNumber(totalMaterialQty)}</td>
+        <td>Rp ${formatNumber(totalCost)}</td>
+    </tr>
+    `;
                                 });
 
+                                // =====================
+                                // HITUNG VARIABLE COST
+                                // =====================
+                                const variableCost = grandTotal * 0.01;
+                                const grandTotalUsageValue = grandTotal + variableCost;
+
+                                // =====================
+                                // FOOTER TABEL
+                                // =====================
+                                html += `
+<tr class="table-info fw-bold">
+    <td colspan="6" class="text-end">
+        VARIABLE COST (1%)
+    </td>
+    <td>
+        Rp ${formatNumber(variableCost)}
+    </td>
+</tr>
+
+<tr class="table-warning fw-bold">
+    <td colspan="6" class="text-end">
+        TOTAL USAGE VALUE
+    </td>
+    <td>
+        Rp ${formatNumber(grandTotal)}
+    </td>
+</tr>
+
+<tr class="table-success fw-bold">
+    <td colspan="6" class="text-end">
+        GRAND TOTAL USAGE VALUE
+    </td>
+    <td>
+        Rp ${formatNumber(grandTotalUsageValue)}
+    </td>
+</tr>
+`;
+
                                 document.getElementById("productionCogsTable").innerHTML = html;
-                                document.getElementById("productionCogsTotal").innerHTML =
-                                    `Rp ${grandTotal.toLocaleString()}`;
+
                             }
 
                             function backProduction() {
@@ -4806,28 +4854,65 @@
                                 );
 
                                 let html = "";
-                                let grandTotal = 0;
-                                forecastProductionData.forEach(item => {
+                                let totalUsageValue = 0;
 
-                                    grandTotal += item.price;
+                                forecastProductionData.forEach(item => {
+                                    totalUsageValue += item.price;
 
                                     html += `
-        <tr>
-            <td>${item.code}</td>
-            <td>${item.name}</td>
-            <td>${item.unit}</td>
-            <td>${item.weight.toLocaleString()}</td>
-            <td>Rp ${item.price.toLocaleString()}</td>
-        </tr>
-        `;
+<tr>
+    <td>${item.code}</td>
+    <td>${item.name}</td>
+    <td>${item.unit}</td>
+    <td>${item.weight.toLocaleString()}</td>
+    <td>Rp ${formatNumber(item.price)}</td>
+</tr>
+`;
                                 });
+
+                                // ===========================
+                                // HITUNG VARIABLE COST
+                                // ===========================
+                                const variableCost = totalUsageValue * 0.01;
+                                const grandTotalUsageValue = totalUsageValue + variableCost;
+
+                                // ===========================
+                                // TAMBAHKAN FOOTER TABEL
+                                // ===========================
+                                html += `
+<tr class="table-info fw-bold">
+    <td colspan="4" class="text-end">
+        VARIABLE COST (1%)
+    </td>
+    <td>
+       Rp ${formatNumber(variableCost)}
+    </td>
+</tr>
+
+<tr class="table-warning fw-bold">
+    <td colspan="4" class="text-end">
+        TOTAL USAGE VALUE
+    </td>
+    <td>
+         Rp ${formatNumber(totalUsageValue)}
+    </td>
+</tr>
+
+<tr class="table-success fw-bold">
+    <td colspan="4" class="text-end">
+        GRAND TOTAL USAGE VALUE
+    </td>
+    <td>
+       Rp ${formatNumber(grandTotalUsageValue)}
+    </td>
+</tr>
+`;
 
                                 document.getElementById("forecastProductionTitle").innerHTML =
                                     `Forecast Produksi Bulan ${formatBulan(start)}`;
 
                                 document.getElementById("forecastProductionTable").innerHTML = html;
-                                document.getElementById("forecastProductionTotal").innerHTML =
-                                    `Rp ${grandTotal.toLocaleString()}`;
+
                             }
 
                             window.viewForecastProduction = viewForecastProduction;
@@ -4886,14 +4971,7 @@
                                 // ==========================
                                 // TOTAL
                                 // ==========================
-                                const totalText =
-                                    document.getElementById("forecastProductionTotal").innerText;
-                                doc.setFontSize(14);
-                                doc.text(
-                                    `Total Forecast : ${totalText}`,
-                                    40,
-                                    doc.lastAutoTable.finalY + 30
-                                );
+
                                 doc.save(
                                     `Forecast-Produksi-${bulan}.pdf`
                                 );
@@ -4964,7 +5042,7 @@
             <td>${data.materialName}</td>
             <td>${data.qty}</td>
             <td>${data.unit}</td>
-            <td>Rp ${Number(data.price).toLocaleString()}</td>
+           <td>Rp ${formatNumber(data.price || 0)}</td>
             <td>${data.date}</td>
             <td>
                 <button class="btn btn-danger btn-sm"
@@ -6458,8 +6536,8 @@
                 <td>${d.materialName}</td>
                 <td>${qty}</td>
                 <td>${d.unit}</td>
-                <td>Rp ${price.toLocaleString("id-ID")}</td>
-                <td>Rp ${avg.toLocaleString("id-ID")}</td>
+                <td>Rp ${formatNumber(price || 0)}</td>
+                <td>Rp ${formatNumber(avg || 0)}</td>
                 <td>${d.supplier}</td>
                 <td>${d.date}</td>
             </tr>
@@ -6471,7 +6549,7 @@
                     TOTAL PURCHASE PRICE
                 </td>
                 <td>
-                    Rp ${totalPurchasePrice.toLocaleString("id-ID")}
+                    Rp ${formatNumber(totalPurchasePrice || 0)}
                 </td>
                 <td colspan="3"></td>
             </tr>
@@ -6681,52 +6759,51 @@
                                         .forEach(item => {
 
                                             fgTable.innerHTML += `
-                <tr>
-                    <td>${item.productCode}</td>
-                    <td>${item.productName}</td>
-                    <td>${item.qty}</td>
-                    <td>${item.qtyPerBox}</td>
-                    <td>${item.date}</td>
-                </tr>
-            `;
+                                    <tr>
+                                        <td>${item.productCode}</td>
+                                        <td>${item.productName}</td>
+                                        <td>${item.qty}</td>
+                                        <td>${item.qtyPerBox}</td>
+                                        <td>${item.date}</td>
+                                    </tr>
+                                `;
                                         });
 
 
                                     // ================= MATERIAL USAGE =================
                                     let materialUsage = {};
                                     let totalUsageValue = 0;
+
                                     // ================= LOAD PRICE FG UNTUK BOX =================
-                                    const priceFgSnap =
-                                        await getDocs(
-                                            collection(db, "price_fg")
-                                        );
+                                    const priceFgSnap = await getDocs(
+                                        collection(db, "price_fg")
+                                    );
+
                                     // ================= MATERIAL DARI RECIPE =================
                                     for (const fg of Object.values(fgMap)) {
-                                        const recipes =
-                                            recipeSnap.docs
-                                                .map(d => d.data())
-                                                .filter(r =>
-                                                    String(r.productCode).trim()
-                                                    === String(fg.productCode).trim()
-                                                );
-
+                                        const recipes = recipeSnap.docs
+                                            .map(d => d.data())
+                                            .filter(r =>
+                                                String(r.productCode).trim() ===
+                                                String(fg.productCode).trim()
+                                            );
 
                                         for (const recipe of recipes) {
-                                            const material =
-                                                materialSnap.docs
-                                                    .map(d => d.data())
-                                                    .find(m =>
-                                                        String(m.name).trim().toLowerCase()
-                                                        === String(recipe.material).trim().toLowerCase()
-                                                    );
-
+                                            const material = materialSnap.docs
+                                                .map(d => d.data())
+                                                .find(m =>
+                                                    String(m.name).trim().toLowerCase() ===
+                                                    String(recipe.material).trim().toLowerCase()
+                                                );
 
                                             if (!material) continue;
+
                                             const materialPrice = Number(material.average || 0);
                                             const usedQty = Number(recipe.qty || 0) * Number(fg.qty || 0);
                                             const usageValue = usedQty * materialPrice;
 
                                             totalUsageValue += usageValue;
+
                                             if (!materialUsage[material.code]) {
                                                 materialUsage[material.code] = {
                                                     code: material.code,
@@ -6735,10 +6812,9 @@
                                                     qty: 0,
                                                     average: materialPrice,
                                                     value: 0
-
                                                 };
-
                                             }
+
                                             materialUsage[material.code].qty += usedQty;
                                             materialUsage[material.code].value += usageValue;
                                         }
@@ -6747,56 +6823,58 @@
                                     // ================= MATERIAL BOX DARI HASIL PRODUKSI =================
                                     prodSnap.forEach(prodDoc => {
                                         const prod = prodDoc.data();
+
                                         if (
                                             prod.date < start ||
                                             prod.date > end
                                         ) return;
+
                                         const productCode = String(prod.productCode || "").trim();
                                         const fgBox = Number(prod.fgBox || 0);
 
                                         priceFgSnap.forEach(priceDoc => {
-                                            const price =
-                                                priceDoc.data();
+                                            const price = priceDoc.data();
+
                                             if (
-
-                                                String(price.productCode || "").trim()
-                                                === productCode
-
+                                                String(price.productCode || "").trim() === productCode
                                             ) {
 
-                                                const boxName =
-                                                    String(price.materialName || "").trim();
-                                                const boxMaterial =
-                                                    materialSnap.docs
-                                                        .map(d => d.data())
-                                                        .find(m =>
-                                                            String(m.name).trim().toLowerCase()
-                                                            === boxName.toLowerCase()
-                                                        );
+                                                const boxName = String(price.materialName || "").trim();
+
+                                                const boxMaterial = materialSnap.docs
+                                                    .map(d => d.data())
+                                                    .find(m =>
+                                                        String(m.name).trim().toLowerCase() ===
+                                                        boxName.toLowerCase()
+                                                    );
 
                                                 if (!boxMaterial) return;
+
                                                 const boxPrice = Number(boxMaterial.average || 0);
                                                 const boxValue = fgBox * boxPrice;
 
                                                 totalUsageValue += boxValue;
+
                                                 if (!materialUsage[boxMaterial.code]) {
                                                     materialUsage[boxMaterial.code] = {
-
                                                         code: boxMaterial.code,
                                                         name: boxMaterial.name,
                                                         unit: boxMaterial.unit,
                                                         qty: 0,
                                                         average: boxPrice,
                                                         value: 0
-
                                                     };
-
                                                 }
+
                                                 materialUsage[boxMaterial.code].qty += fgBox;
                                                 materialUsage[boxMaterial.code].value += boxValue;
                                             }
                                         });
                                     });
+
+                                    // ================= HITUNG VARIABLE COST =================
+                                    const variableCost = totalUsageValue * 0.01;
+                                    const grandTotalUsageValue = totalUsageValue + variableCost;
 
                                     // ================= RENDER MATERIAL =================
                                     Object.values(materialUsage)
@@ -6824,17 +6902,35 @@
                             `;
                                         });
 
-                                    // TOTAL ROW
+                                    // ================= TOTAL ROW =================
                                     materialTable.innerHTML += `
-                                <tr class="table-warning text-dark fw-bold">
-                                    <td colspan="5" class="text-end">
-                                        TOTAL USAGE VALUE
-                                    </td>
-                                    <td>
-                                        Rp ${totalUsageValue.toLocaleString("id-ID")}
-                                    </td>
-                                </tr>
-                            `;
+                        <tr class="table-info text-dark fw-bold">
+                            <td colspan="5" class="text-end">
+                                VARIABLE COST (1%)
+                            </td>
+                            <td>
+                                Rp ${variableCost.toLocaleString("id-ID")}
+                            </td>
+                        </tr>
+
+                        <tr class="table-warning text-dark fw-bold">
+                            <td colspan="5" class="text-end">
+                                TOTAL USAGE VALUE
+                            </td>
+                            <td>
+                                Rp ${totalUsageValue.toLocaleString("id-ID")}
+                            </td>
+                        </tr>
+
+                        <tr class="table-success text-dark fw-bold">
+                            <td colspan="5" class="text-end">
+                                GRAND TOTAL USAGE VALUE
+                            </td>
+                            <td>
+                                Rp ${grandTotalUsageValue.toLocaleString("id-ID")}
+                            </td>
+                        </tr>
+                    `;
                                 }
                                 catch (error) {
                                     console.error(
