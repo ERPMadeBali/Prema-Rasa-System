@@ -2345,25 +2345,19 @@
                             }
                             /* ================= MASTER MENU ================= */
                             function toggleMaster() {
-                                const menu = document.getElementById("masterSubMenu");
-                                menu.style.display = (menu.style.display === "block") ? "none" : "block";
-                            }
-
-                            async function showMaster(type) {
-                                /*====HAK AKSES MASTER DATA====*/
+                                /* ========LOCK ACCESS INPUT DATA========== */
                                 const user = auth.currentUser;
-
-                                if (!user) {
-                                    alert("Silakan login terlebih dahulu.");
-                                    return;
-                                }
-
+                                if (!user) return;
                                 const username = user.email.split("@")[0].toLowerCase().trim();
                                 if (username !== "user") {
                                     alert("You do not have access to Master Data!");
                                     return;
                                 }
+                                const menu = document.getElementById("masterSubMenu");
+                                menu.style.display = (menu.style.display === "block") ? "none" : "block";
+                            }
 
+                            async function showMaster(type) {
                                 /* ================= SATUAN ================= */
                                 currentMaster = type;
                                 let html = "";
@@ -2906,17 +2900,7 @@
                             }
 
                             /* ================= RECIPE ================= */
-                            /* ==LOCK ACCES INPUT DATA==== */
                             async function showProductionRecipe() {
-                                const user = auth.currentUser;
-                                if (!user) return;
-                                const username = user.email.split("@")[0].toLowerCase().trim();
-
-                                if (username !== "user") {
-                                    alert("You do not have access to Master Data!");
-                                    return;
-                                }
-
                                 showPage('forecastproduk');
                                 recipeItems = [];
                                 document.getElementById("recipeTable").innerHTML = "";
@@ -3308,16 +3292,6 @@
 
                             /* ================= OPEN PAGE ================= */
                             async function showPriceProduct() {
-
-                                /* ========LOCK ACCESS INPUT DATA========== */
-                                const user = auth.currentUser;
-                                if (!user) return;
-                                const username = user.email.split("@")[0].toLowerCase().trim();
-                                if (username !== "user") {
-                                    alert("You do not have access to Master Data!");
-                                    return;
-                                }
-
                                 showPage("pricefg");
                                 await loadPriceFGProducts();
                                 await loadPriceFGMaterials();
@@ -3675,6 +3649,14 @@
                             }
                             /* ================= PURCHASING ================= */
                             function togglePurchasing() {
+                                /* ========LOCK ACCESS INPUT DATA========== */
+                                const user = auth.currentUser;
+                                if (!user) return;
+                                const username = user.email.split("@")[0].toLowerCase().trim();
+                                if (username !== "user") {
+                                    alert("You do not have access to Master Data!");
+                                    return;
+                                }
                                 const menu = document.getElementById("purchasingSubMenu");
                                 menu.style.display = (menu.style.display === "block") ? "none" : "block";
                             }
@@ -3700,6 +3682,7 @@
 
                             /* ================= LOAD OPTIONS ================= */
                             async function loadPurchaseOptions() {
+
                                 // ================= MATERIAL =================
                                 const materialSnap = await getDocs(
                                     query(
