@@ -310,10 +310,8 @@
                     <i class="fa-solid fa-database"></i>
                     Master Data
                 </a>
-
                 <div id="masterSubMenu" style="display:none; padding-left:20px;">
                     <a href="#" onclick="showMaster('satuan')">- UOM/Unit</a>
-                    <a href="#" onclick="showMaster('supplier')">- Supplier</a>
                     <a href="#" onclick="showMaster('bahan')">- Raw Materials</a>
                     <a href="#" onclick="showProductionRecipe()">- Forecast Product</a>
                     <a href="#" onclick="showPriceProduct()">- Selling Price Product</a>
@@ -323,6 +321,7 @@
                 <a href="#" onclick="togglePurchasing()">
                     <i class="fa-solid fa-cart-shopping"></i>Purchasing</a>
                 <div id="purchasingSubMenu" style="display:none; padding-left:20px;">
+                    <a href="#" onclick="showSupplier('supplier')">- Add Supplier</a>
                     <a href="#" onclick="showPage('purchasing')">- PO Raw Material</a>
                     <a href="#" onclick="showPage('purchasingView')">- Report Purchae Order</a>
                 </div>
@@ -1706,6 +1705,7 @@
                                         <th>Kode</th>
                                         <th>Nama Biaya</th>
                                         <th>Value</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="productionCostList">
@@ -2289,6 +2289,8 @@
                             // =====================================================
                             // GLOBAL NUMBER FORMAT
                             // =====================================================
+
+                            // Untuk nilai uang / value (2 desimal)
                             function formatNumber(value) {
                                 return Number(value).toLocaleString("id-ID", {
                                     minimumFractionDigits: 2,
@@ -2296,6 +2298,15 @@
                                 });
                             }
 
+                            // Untuk gramasi / berat (maksimal 6 desimal)
+                            function formatWeight(value) {
+                                return Number(value).toLocaleString("id-ID", {
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 6
+                                });
+                            }
+
+                            // Konversi format Indonesia ke Number
                             function parseNumberID(value) {
                                 return Number(
                                     String(value)
@@ -2407,61 +2418,6 @@
         `;
                                 }
 
-                                /* ================= SUPPLIER ================= */
-                                if (type === "supplier") {
-                                    html = `
-        <h5 class="mb-3 text-dark">
-            <i class="fa-solid fa-truck"></i>
-            Master Data Supplier
-        </h5>
-         <div class="section-divider"></div>
-       <div class="row mb-3">
-             <div class="col-md-3">
-                    <label>SUP Code</label>
-                        <input type="text"
-                        id="suppliers"
-                        class="form-control auto-field" readonly>
-                    </div>
-            <div class="col-md-3">
-                <label>Supplier Name</label>
-                <input type="text"
-                    id="supplierName"
-                    class="form-control mb-2"
-                    placeholder="Input Supplier Name">
-            </div>
-            <div class="col-md-3">
-                <label>Supplier Address</label>
-                <input type="text"
-                    id="supplierAddress"
-                    class="form-control mb-2"
-                    placeholder="Input Address">
-            </div>
-            <div class="col-md-3">
-                <label>Contact / Mobile Phone</label>
-                <input type="text"
-                    id="supplierPhone"
-                    class="form-control mb-2"
-                    placeholder="Input Contact/Mobile Phone">
-            </div>
-        </div>
-        <button class="btn btn-warning w-100 mb-3"
-            onclick="addSupplier()">
-            Save Supplier
-        </button>
-        <table class="table table-light table-striped">
-            <thead>
-                <tr>
-                    <th>Supplier Code</th>
-                    <th>Supplier Name</th>
-                    <th>Address</th>
-                    <th>Contact</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="supplierList"></tbody>
-        </table>
-        `;
-                                }
                                 /* ================= BAHAN BAKU ================= */
                                 if (type === "bahan") {
                                     html = `
@@ -2593,11 +2549,12 @@
                                 try {
 
                                     const snap = await getDocs(
-                                        collection(dbRead, collectionName)
+                                        collection(db, collectionName)
                                     );
 
                                     if (snap.empty) {
                                         return prefix + "001";
+
 
                                     }
 
@@ -2655,7 +2612,7 @@
                     <button
                         class="btn btn-danger btn-sm w-100"
                         onclick="deleteUnit('${d.id}')">
-                        Hapus
+                        Delete
                     </button>
                 </td>
             </tr>
@@ -2695,8 +2652,79 @@
 
                                 }
                             }
+
                             /* ================= SUPPLIER ================= */
                             /* AUTO TAMPILKAN CODE BERIKUTNYA */
+                            async function showSupplier() {
+                                let html = `
+
+    <h5 class="mb-3 text-dark">
+        <i class="fa-solid fa-truck"></i>
+        Master Data Supplier
+    </h5>
+    <div class="section-divider"></div>
+    <div class="row mb-3">
+
+        <div class="col-md-3">
+            <label>SUP Code</label>
+            <input type="text"
+                id="suppliers"
+                class="form-control auto-field"
+                readonly>
+        </div>
+
+        <div class="col-md-3">
+            <label>Supplier Name</label>
+            <input type="text"
+                id="supplierName"
+                class="form-control mb-2">
+        </div>
+
+        <div class="col-md-3">
+            <label>Supplier Address</label>
+            <input type="text"
+                id="supplierAddress"
+                class="form-control mb-2">
+        </div>
+
+        <div class="col-md-3">
+            <label>Contact</label>
+            <input type="text"
+                id="supplierPhone"
+                class="form-control mb-2">
+        </div>
+
+    </div>
+
+    <button class="btn btn-warning w-100 mb-3"
+        onclick="addSupplier()">
+        Save Supplier
+    </button>
+
+
+    <table class="table table-light table-striped">
+
+        <thead>
+            <tr>
+                <th>Supplier Code</th>
+                <th>Supplier Name</th>
+                <th>Address</th>
+                <th>Contact</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="supplierList"></tbody>
+
+    </table>
+    `;
+
+
+                                document.getElementById("masterContent").innerHTML = html;
+                                showPage('masterdata');
+                                await loadSuppliers();
+                                await setNextSupCode();
+                            }
                             async function setNextSupCode() {
                                 const code = await generateCode("suppliers", "SUP");
                                 const input = document.getElementById("suppliers");
@@ -2759,7 +2787,7 @@
                 <button
                     class="btn btn-danger btn-sm w-100"
                     onclick="deleteSupplier('${d.id}')">
-                    Hapus
+                    Delete
                 </button>
             </td>
         </tr>
@@ -2847,14 +2875,14 @@
         <td>${d.data().code}</td>
         <td>${d.data().name}</td>
         <td>${d.data().unit}</td>
-        <td> ${formatNumber(d.data().weight || 0)}</td>
+        <td> ${formatWeight(d.data().weight || 0)}</td>
         <td>Rp ${formatNumber(d.data().price || 0)}</td>
         <td>Rp ${formatNumber(d.data().average || 0)}</td>
         <td width="120">
             <button
                 class="btn btn-danger btn-sm w-100"
                 onclick="deleteMaterial('${d.id}')">
-                Hapus
+                Delete
             </button>
         </td>
     </tr>
@@ -2896,8 +2924,21 @@
                                 if (el) el.innerHTML = html;
                             }
 
-                            /* ================= RECIPE ================= */
+                            /* ================================= */
+                            /* RECIPE DATA INPUT
+                            /* ================================= */
                             async function showProductionRecipe() {
+
+                                /* ==LOCK ACCES INPUT DATA==== */
+                                const user = auth.currentUser;
+                                if (!user) return;
+                                const username = user.email.split("@")[0].toLowerCase().trim();
+
+                                if (username !== "user") {
+                                    alert("You do not have access to Master Data!");
+                                    return;
+                                }
+
                                 showPage('forecastproduk');
                                 recipeItems = [];
                                 document.getElementById("recipeTable").innerHTML = "";
@@ -3044,7 +3085,7 @@
             <td width="120">
                 <button class="btn btn-danger btn-sm"
                     onclick="deleteRecipeItem(${index})">
-                    Hapus
+                    Delete
                 </button>
             </td>
         </tr>
@@ -3628,7 +3669,7 @@
                                 <button
                                     class="btn btn-danger btn-sm w-100"
                                     onclick="deletePriceFG('${d.id}')">
-                                    Hapus
+                                    Delete
                                 </button>
                             </td>
                         </tr>
@@ -3668,6 +3709,7 @@
                                 const menu = document.getElementById("purchasingSubMenu");
                                 menu.style.display = (menu.style.display === "block") ? "none" : "block";
                             }
+
                             function initPurchaseFilter() {
                                 const yearSelect = document.getElementById("filterYear");
                                 const currentYear = new Date().getFullYear();
@@ -3694,7 +3736,7 @@
                                 // ================= MATERIAL =================
                                 const materialSnap = await getDocs(
                                     query(
-                                        collection(db, "materials"),
+                                        collection(dbRead, "materials"),
                                         orderBy("code", "asc")
                                     )
                                 );
@@ -3717,7 +3759,7 @@
                                 // ================= SUPPLIER =================
                                 const supplierSnap = await getDocs(
                                     query(
-                                        collection(db, "suppliers"),
+                                        collection(dbRead, "suppliers"),
                                         orderBy("code", "asc")
                                     )
                                 );
@@ -3778,9 +3820,9 @@
                                     alert("Lengkapi data purchasing");
                                     return;
                                 }
-                                const snap = await getDocs(collection(db, "purchasing"));
+                                const snap = await getDocs(collection(dbRead, "purchasing"));
                                 const code = genCode("PUR", snap.size);
-                                await addDoc(collection(db, "purchasing"), {
+                                await addDoc(collection(dbRead, "purchasing"), {
 
                                     materialCode,
                                     materialName,
@@ -3830,7 +3872,7 @@
 
                                 const snap = await getDocs(
                                     query(
-                                        collection(db, "purchasing"),
+                                        collection(dbRead, "purchasing"),
                                         where("date", ">=", startDate),
                                         where("date", "<=", endDate),
                                         orderBy("date", "asc")
@@ -3862,7 +3904,7 @@
         <td>
             <button class="btn btn-danger btn-sm"
                 onclick="deletePurchase('${d.id}')">
-                Hapus
+                Delete
             </button>
         </td>
     </tr>
@@ -3880,7 +3922,7 @@
                             async function deletePurchase(id) {
                                 if (!confirm("Hapus purchasing?")) return;
 
-                                await deleteDoc(doc(db, "purchasing", id));
+                                await deleteDoc(doc(dbRead, "purchasing", id));
                                 await loadPurchases();
                                 await loadPurchasesData();
 
@@ -3898,7 +3940,7 @@
                                 // FILTER TANGGAL
                                 if (startDate && endDate) {
                                     q = query(
-                                        collection(db, "purchasing"),
+                                        collection(dbRead, "purchasing"),
                                         where("date", ">=", startDate),
                                         where("date", "<=", endDate),
                                         orderBy("date", "asc")
@@ -3907,7 +3949,7 @@
                                 } else {
 
                                     q = query(
-                                        collection(db, "purchasing"),
+                                        collection(dbRead, "purchasing"),
                                         orderBy("date", "asc")
                                     );
                                 }
@@ -3929,18 +3971,8 @@
                 <td>${item.materialName}</td>
                 <td>${qty}</td>
                 <td>${item.unit}</td>
-                <td>
-                    Rp ${price.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    })}
-                </td>
-                <td>
-                    Rp ${average.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    })}
-                </td>
+                <td>Rp ${formatNumber(price)}</td>
+               <td>Rp ${formatNumber(average)}</td>
                 <td>${item.supplier}</td>
                 <td>${item.date}</td>
             </tr>
@@ -3949,10 +3981,7 @@
 
                                 // TOTAL HARGA BELI
                                 document.getElementById("totalPurchasePrice").innerHTML =
-                                    `Rp ${grandTotal.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    })}`;
+                                    `Rp ${formatNumber(grandTotal)}`;
 
                                 // TABLE
                                 document.getElementById("purchaseViewList").innerHTML =
@@ -3996,7 +4025,7 @@
                                 if (startDate && endDate) {
 
                                     q = query(
-                                        collection(db, "purchasing"),
+                                        collection(dbRead, "purchasing"),
                                         where("date", ">=", startDate),
                                         where("date", "<=", endDate),
                                         orderBy("date", "asc")
@@ -4005,7 +4034,7 @@
                                 } else {
 
                                     q = query(
-                                        collection(db, "purchasing"),
+                                        collection(dbRead, "purchasing"),
                                         orderBy("date", "desc")
                                     );
                                 }
@@ -4045,8 +4074,8 @@
                                         item.materialName,
                                         qty,
                                         item.unit,
-                                        "Rp " + price.toLocaleString(),
-                                        "Rp " + average.toLocaleString(),
+                                        "Rp " + formatNumber(price),
+                                        "Rp " + formatNumber(average),
                                         item.supplier,
                                         item.date
                                     ]);
@@ -4078,7 +4107,7 @@
                                 // ================= TOTAL HARGA BELI =================
                                 doc.setFontSize(12);
                                 doc.text(
-                                    `Total Purchase Order : Rp ${totalPrice.toLocaleString()}`,
+                                    `Total Purchase Order : Rp ${formatNumber(totalPrice)}`,
                                     40,
                                     80
                                 );
@@ -4402,7 +4431,7 @@
             <td>
                 <button class="btn btn-danger btn-sm"
                     onclick="deleteProduction('${d.id}')">
-                    Hapus
+                    Delete
                 </button>
                 
                 <button class="btn btn-info btn-sm"
@@ -4668,7 +4697,7 @@
             <td>
                 <button class="btn btn-danger btn-sm"
                     onclick="deleteProductionResult('${d.id}')">
-                    Hapus
+                    Delete
                 </button>
             </td>
         </tr>
@@ -5008,7 +5037,7 @@
             <td>
                 <button class="btn btn-danger btn-sm"
                     onclick="deleteWasteFG('${d.id}')">
-                    Hapus
+                    Delete
                 </button>
             </td>
         </tr>
@@ -5047,7 +5076,7 @@
             <td>
                 <button class="btn btn-danger btn-sm"
                     onclick="deleteWasteMaterial('${d.id}')">
-                    Hapus
+                    Delete
                 </button>
             </td>
         </tr>
@@ -5161,7 +5190,7 @@
     <td>
         <button class="btn btn-danger btn-sm"
             onclick="deleteWasteFG('${d.id}')">
-            Hapus
+            Delete
         </button>
     </td>
 </tr>
@@ -5341,7 +5370,7 @@
             <td width="120">
                 <button class="btn btn-danger btn-sm w-100"
                     onclick="deleteWasteMaterial('${d.id}')">
-                    Hapus
+                    Delete
                 </button>
             </td>
         </tr>
@@ -5439,7 +5468,7 @@
     <td>
         <button class="btn btn-danger btn-sm w-100"
             onclick="deleteStore('${d.id}')">
-            Hapus
+            Delete
         </button>
     </td>
 </tr>
@@ -5543,7 +5572,7 @@
     <td>
         <button class="btn btn-danger btn-sm"
             onclick="removeSalesFGRow('${rowId}')">
-            Hapus
+            Delete
         </button>
     </td>
 </tr>
@@ -5730,7 +5759,7 @@
     <td>
         <button class="btn btn-danger btn-sm"
             onclick="deleteSalesFG('${d.id}')">
-            Hapus
+            Delete
         </button>
     </td>
 </tr>
@@ -5879,7 +5908,7 @@
     <td>
         <button class="btn btn-danger btn-sm w-100"
             onclick="deleteSales('${d.id}')">
-            Hapus
+            Delete
         </button>
     </td>
 </tr>`;
@@ -6073,7 +6102,7 @@
                                 const overhead = Number(document.getElementById("costOverhead").value || 0);
                                 const total = salary + electric + gas + internet + air + bbm + atk + keamanan + sampah + overhead;
                                 document.getElementById("costTotal").innerHTML =
-                                    `Rp ${total.toLocaleString()}`;
+                                    `Rp ${formatNumber(total)}`;
                             }
 
                             /* ================= EVENT INPUT ================= */
@@ -6177,25 +6206,25 @@
                                 const end = document.getElementById("costEndDate").value;
                                 const tbody = document.getElementById("productionCostList");
                                 const grandTotalEl = document.getElementById("productionCostGrandTotal");
-                                // RESET VIEW dulu
+
+                                // RESET VIEW
                                 tbody.innerHTML = `
         <tr>
-            <td colspan="10" class="text-center text-muted">
+            <td colspan="5" class="text-center text-muted">
                 Silakan pilih tanggal untuk menampilkan data
             </td>
         </tr>
     `;
 
                                 grandTotalEl.innerHTML = "Rp 0";
-
                                 // kalau belum filter, STOP
                                 if (!start || !end) return;
-                                const snap =
-                                    await getDocs(collection(db, "production_cost"));
+                                const snap = await getDocs(
+                                    collection(db, "production_cost")
+                                );
 
                                 let html = "";
                                 let grandTotal = 0;
-
                                 snap.forEach(docSnap => {
                                     const data = docSnap.data();
                                     // FILTER RANGE
@@ -6203,27 +6232,60 @@
                                     grandTotal += Number(data.value || 0);
 
                                     html += `
-                    <tr>
-                        <td>${data.date}</td>
-                        <td>${data.code}</td>
-                        <td>${data.name}</td>
-                        <td>Rp ${Number(data.value).toLocaleString()}</td>
-                    </tr>
-                    `;
+            <tr>
+                <td>${data.date}</td>
+                <td>${data.code}</td>
+                <td>${data.name}</td>
+                <td>Rp ${formatNumber(data.value)}</td>
+                <td class="text-center">
+                    <button
+                        class="btn btn-sm btn-danger"
+                        onclick="deleteProductionCost('${docSnap.id}')">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        `;
                                 });
 
                                 tbody.innerHTML =
                                     html ||
                                     `
-                    <tr>
-                        <td colspan="4" class="text-center">
-                            Tidak ada data pada periode ini
-                        </td>
-                    </tr>
-                    `;
+        <tr>
+            <td colspan="5" class="text-center">
+                Tidak ada data pada periode ini
+            </td>
+        </tr>
+        `;
+
 
                                 grandTotalEl.innerHTML =
-                                    `Rp ${grandTotal.toLocaleString()}`;
+                                    `Rp ${formatNumber(grandTotal)}`;
+                            }
+                            /* ================= DELETE PRODUCTION COST ================= */
+                            async function deleteProductionCost(id) {
+                                const confirmDelete = confirm(
+                                    "Apakah Anda yakin ingin menghapus data ini?"
+                                );
+                                if (!confirmDelete) return;
+                                try {
+                                    await deleteDoc(
+                                        doc(db, "production_cost", id)
+                                    );
+                                    alert("Data berhasil dihapus");
+                                    // refresh data setelah delete
+                                    loadProductionCostReport();
+                                } catch (error) {
+
+                                    console.error(
+                                        "Delete production cost error:",
+                                        error
+                                    );
+
+                                    alert(
+                                        "Gagal menghapus data"
+                                    );
+                                }
                             }
 
                             /* =========================================================
@@ -6499,7 +6561,7 @@
 
                                 const snap = await getDocs(
                                     query(
-                                        collection(db, "purchasing"),
+                                        collection(dbRead, "purchasing"),
                                         orderBy("date", "asc")
                                     )
                                 );
@@ -6582,7 +6644,7 @@
                                 if (startDate && endDate) {
 
                                     q = query(
-                                        collection(db, "purchasing"),
+                                        collection(dbRead, "purchasing"),
                                         where("date", ">=", startDate),
                                         where("date", "<=", endDate),
                                         orderBy("date", "asc")
@@ -6591,7 +6653,7 @@
                                 } else {
 
                                     q = query(
-                                        collection(db, "purchasing"),
+                                        collection(dbRead, "purchasing"),
                                         orderBy("date", "asc")
                                     );
                                 }
@@ -8527,6 +8589,7 @@
                             window.logout = logout;
                             window.toggleMaster = toggleMaster;
                             window.showMaster = showMaster;
+                            window.showSupplier = showSupplier;
                             window.showPage = showPage;
 
                             window.addUnit = addUnit;
@@ -8616,6 +8679,7 @@
                             window.openProductionCost = openProductionCost;
                             window.saveProductionCost = saveProductionCost;
                             window.loadProductionCostReport = loadProductionCostReport;
+                            window.deleteProductionCost = deleteProductionCost;
 
                             window.openReport = openReport;
                             window.loadPurchasingReport = loadPurchasingReport;
