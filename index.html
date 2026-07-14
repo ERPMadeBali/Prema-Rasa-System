@@ -2934,7 +2934,7 @@
                                 );
 
                                 const snap = await getDocs(q);
-                                const code = genCode("PKPR", snap.size);
+                                const code = genCode("PR", snap.size);
                                 document.getElementById("recipeCode").value = code;
                                 loadRecipeMaterials();
                                 loadRecipeUnits();
