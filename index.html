@@ -6361,6 +6361,7 @@
                                         totalCOGS += totalValue;
                                     }
                                 }
+                                totalCOGS *= 1.01;
 
                                 /* ================= OVERHEAD COST ================= */
                                 let totalOverhead = 0;
@@ -6424,22 +6425,22 @@
 
                                 /* ================= RENDER ================= */
                                 document.getElementById("plSales").innerHTML =
-                                    `Rp ${totalSales.toLocaleString()}`;
+                                    `Rp ${formatNumber(totalSales)}`;
 
                                 document.getElementById("plCOGS").innerHTML =
-                                    `Rp ${totalCOGS.toLocaleString()}`;
+                                    `Rp ${formatNumber(totalCOGS)}`;
 
                                 document.getElementById("plOverhead").innerHTML =
-                                    `Rp ${totalOverhead.toLocaleString()}`;
+                                    `Rp ${formatNumber(totalOverhead)}`;
 
                                 document.getElementById("plWasteMaterial").innerHTML =
-                                    `Rp ${totalWasteMaterial.toLocaleString()}`;
+                                    `Rp ${formatNumber(totalWasteMaterial)}`;
 
                                 document.getElementById("plWasteFG").innerHTML =
-                                    `Rp ${totalWasteFG.toLocaleString()}`;
+                                    `Rp ${formatNumber(totalWasteFG)}`;
 
                                 document.getElementById("plGrossProfit").innerHTML =
-                                    `Rp ${grossProfit.toLocaleString()}`;
+                                    `Rp ${formatNumber(grossProfit)}`;
                             }
 
                             /* ================================================= */
