@@ -2796,7 +2796,7 @@
                             /* ================= RAW MATERIAL DATA ================= */
                             /* AUTO TAMPILKAN CODE BERIKUTNYA */
                             async function setNextMaterialCode() {
-                                const code = await generateCode("materials", "MAT");
+                                const code = await generateCode("materials", "PRM");
                                 const input = document.getElementById("materials");
 
                                 if (input) {
@@ -2819,7 +2819,7 @@
                                 const average = Number(price) / Number(weight);
 
                                 // generate kode
-                                const code = await generateCode("materials", "MAT");
+                                const code = await generateCode("materials", "PRM");
 
                                 await addDoc(collection(db, "materials"), {
                                     code,
@@ -2934,7 +2934,7 @@
                                 );
 
                                 const snap = await getDocs(q);
-                                const code = genCode("PR", snap.size);
+                                const code = genCode("PRK", snap.size);
                                 document.getElementById("recipeCode").value = code;
                                 loadRecipeMaterials();
                                 loadRecipeUnits();
