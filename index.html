@@ -2212,17 +2212,7 @@
                             import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
                             import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-                            const firebaseConfig1 = {
-                                apiKey: "AIzaSyCqmojmZagGLMpxpemlhf3L0u42lShW6NM",
-                                authDomain: "pia-made-bali.firebaseapp.com",
-                                projectId: "pia-made-bali",
-                                storageBucket: "pia-made-bali.firebasestorage.app",
-                                messagingSenderId: "140052385978",
-                                appId: "1:140052385978:web:64b934a162de955f01b283",
-                                measurementId: "G-M0QC6C6VNS"
-                            };
-
-                            const firebaseConfig2 = {
+                            const firebaseConfig = {
                                 apiKey: "AIzaSyAINEugboloQA7jg7PDWMM9GHsMMXwM2Cg",
                                 authDomain: "prema-rasa-v2.firebaseapp.com",
                                 projectId: "prema-rasa-v2",
@@ -2232,14 +2222,9 @@
                                 measurementId: "G-QKXHYDN63D"
                             };
 
-                            // Firebase 1 (Pia Made Bali) -> BACA
-                            const app1 = initializeApp(firebaseConfig1, "pia-made-bali");
-                            const dbRead = getFirestore(app1);
-
-                            // Firebase 2 (Prema Rasa) -> SIMPAN
-                            const app2 = initializeApp(firebaseConfig2, "prema-rasa");
-                            const auth = getAuth(app2);
-                            const db = getFirestore(app2);
+                            const app = initializeApp(firebaseConfig);
+                            const auth = getAuth(app);
+                            const db = getFirestore(app);
 
                             /* ================= SESSION LOGIN ================= */
                             onAuthStateChanged(auth, (user) => {
@@ -2527,7 +2512,7 @@
                                 try {
 
                                     const code = await generateCode("units", "UNT");
-                                    await addDoc(collection(dbRead, "units"), {
+                                    await addDoc(collection(db, "units"), {
                                         code: code,
                                         name: name
 
@@ -2595,7 +2580,7 @@
                             async function loadUnits() {
                                 try {
                                     const q = query(
-                                        collection(dbRead, "units"),
+                                        collection(db, "units"),
                                         orderBy("code", "asc")
                                     );
                                     const snap = await getDocs(q);
@@ -2640,7 +2625,7 @@
                                     return;
                                 }
                                 try {
-                                    await deleteDoc(doc(dbRead, "units", id));
+                                    await deleteDoc(doc(db, "units", id));
                                     await loadUnits();
                                     /* UPDATE CODE BERIKUTNYA */
                                     await setNextUnitCode();
@@ -2743,14 +2728,14 @@
                                 }
                                 // ambil jumlah data supplier
                                 const q = query(
-                                    collection(dbRead, "suppliers"),
+                                    collection(db, "suppliers"),
                                     orderBy("code", "asc")
                                 );
 
                                 const snap = await getDocs(q);
                                 // generate kode otomatis
                                 const code = await generateCode("suppliers", "SUP");
-                                await addDoc(collection(dbRead, "suppliers"), {
+                                await addDoc(collection(db, "suppliers"), {
                                     code,
                                     name,
                                     address,
@@ -2770,7 +2755,7 @@
                             }
                             async function loadSuppliers() {
                                 const q = query(
-                                    collection(dbRead, "suppliers"),
+                                    collection(db, "suppliers"),
                                     orderBy("code", "asc")
                                 );
 
@@ -2801,7 +2786,7 @@
                             async function deleteSupplier(id) {
                                 const confirmDelete = confirm("Yakin anda akan Hapus data supplier ini ?");
                                 if (!confirmDelete) return;
-                                await deleteDoc(doc(dbRead, "suppliers", id));
+                                await deleteDoc(doc(db, "suppliers", id));
 
                                 loadSuppliers();
                                 await setNextSupCode();
@@ -2836,7 +2821,7 @@
                                 // generate kode
                                 const code = await generateCode("materials", "MAT");
 
-                                await addDoc(collection(dbRead, "materials"), {
+                                await addDoc(collection(db, "materials"), {
                                     code,
                                     name,
                                     unit,
@@ -2862,7 +2847,7 @@
 
                             async function loadMaterials() {
                                 const q = query(
-                                    collection(dbRead, "materials"),
+                                    collection(db, "materials"),
                                     orderBy("code", "asc")
                                 );
 
@@ -2897,7 +2882,7 @@
                                 const confirmDelete = confirm("Yakin anda akan Hapus data bahan baku ini ?");
                                 if (!confirmDelete) return;
 
-                                await deleteDoc(doc(dbRead, "materials", id));
+                                await deleteDoc(doc(db, "materials", id));
                                 await setNextMaterialCode();
 
                                 loadMaterials();
@@ -2906,7 +2891,7 @@
 
                             async function loadUnitOptions() {
                                 const q = query(
-                                    collection(dbRead, "units"),
+                                    collection(db, "units"),
                                     orderBy("code", "asc")
                                 );
 
@@ -2962,7 +2947,7 @@
 
                             async function loadRecipeMaterials() {
                                 const q = query(
-                                    collection(dbRead, "materials"),
+                                    collection(db, "materials"),
                                     orderBy("code", "asc")
                                 );
 
@@ -2981,7 +2966,7 @@
                             }
                             async function loadRecipeUnits() {
                                 const q = query(
-                                    collection(dbRead, "units"),
+                                    collection(db, "units"),
                                     orderBy("code", "asc")
                                 );
                                 const snap = await getDocs(q);
@@ -3009,7 +2994,7 @@
                                 }
 
                                 const materialSnap =
-                                    await getDocs(collection(dbRead, "materials"));
+                                    await getDocs(collection(db, "materials"));
 
                                 let average = 0;
                                 materialSnap.forEach(mat => {
@@ -3041,7 +3026,7 @@
 
                                 // cari average material
                                 const materialSnap =
-                                    await getDocs(collection(dbRead, "materials"));
+                                    await getDocs(collection(db, "materials"));
 
                                 let materialPrice = 0;
                                 materialSnap.forEach(mat => {
@@ -3150,7 +3135,7 @@
                                 );
 
                                 const materialSnap = await getDocs(
-                                    collection(dbRead, "materials")
+                                    collection(db, "materials")
                                 );
 
                                 const recipes = recipeSnap.docs.map(d => d.data());
@@ -3265,7 +3250,7 @@
                                     await getDocs(collection(db, "product_recipes"));
                                 // ambil bahan baku
                                 const materialSnap =
-                                    await getDocs(collection(dbRead, "materials"));
+                                    await getDocs(collection(db, "materials"));
 
                                 let grandTotal = 0;
                                 let rows = [];
@@ -3383,7 +3368,7 @@
                                 if (!select) return;
                                 const snap = await getDocs(
                                     query(
-                                        collection(dbRead, "materials"),
+                                        collection(db, "materials"),
                                         orderBy("code", "asc")
                                     )
                                 );
@@ -3416,7 +3401,7 @@
                                 if (!select) return;
                                 const snap = await getDocs(
                                     query(
-                                        collection(dbRead, "materials"),
+                                        collection(db, "materials"),
                                         orderBy("code", "asc")
                                     )
                                 );
@@ -3455,7 +3440,7 @@
                                         );
                                     const materialSnap =
                                         await getDocs(
-                                            collection(dbRead, "materials")
+                                            collection(db, "materials")
                                         );
                                     recipeSnap.forEach(recipe => {
                                         const r = recipe.data();
@@ -3736,7 +3721,7 @@
                                 // ================= MATERIAL =================
                                 const materialSnap = await getDocs(
                                     query(
-                                        collection(dbRead, "materials"),
+                                        collection(db, "materials"),
                                         orderBy("code", "asc")
                                     )
                                 );
@@ -3759,7 +3744,7 @@
                                 // ================= SUPPLIER =================
                                 const supplierSnap = await getDocs(
                                     query(
-                                        collection(dbRead, "suppliers"),
+                                        collection(db, "suppliers"),
                                         orderBy("code", "asc")
                                     )
                                 );
@@ -3820,9 +3805,9 @@
                                     alert("Lengkapi data purchasing");
                                     return;
                                 }
-                                const snap = await getDocs(collection(dbRead, "purchasing"));
+                                const snap = await getDocs(collection(db, "purchasing"));
                                 const code = genCode("PUR", snap.size);
-                                await addDoc(collection(dbRead, "purchasing"), {
+                                await addDoc(collection(db, "purchasing"), {
 
                                     materialCode,
                                     materialName,
@@ -3872,7 +3857,7 @@
 
                                 const snap = await getDocs(
                                     query(
-                                        collection(dbRead, "purchasing"),
+                                        collection(db, "purchasing"),
                                         where("date", ">=", startDate),
                                         where("date", "<=", endDate),
                                         orderBy("date", "asc")
@@ -3922,7 +3907,7 @@
                             async function deletePurchase(id) {
                                 if (!confirm("Hapus purchasing?")) return;
 
-                                await deleteDoc(doc(dbRead, "purchasing", id));
+                                await deleteDoc(doc(db, "purchasing", id));
                                 await loadPurchases();
                                 await loadPurchasesData();
 
@@ -3940,7 +3925,7 @@
                                 // FILTER TANGGAL
                                 if (startDate && endDate) {
                                     q = query(
-                                        collection(dbRead, "purchasing"),
+                                        collection(db, "purchasing"),
                                         where("date", ">=", startDate),
                                         where("date", "<=", endDate),
                                         orderBy("date", "asc")
@@ -3949,7 +3934,7 @@
                                 } else {
 
                                     q = query(
-                                        collection(dbRead, "purchasing"),
+                                        collection(db, "purchasing"),
                                         orderBy("date", "asc")
                                     );
                                 }
@@ -4025,7 +4010,7 @@
                                 if (startDate && endDate) {
 
                                     q = query(
-                                        collection(dbRead, "purchasing"),
+                                        collection(db, "purchasing"),
                                         where("date", ">=", startDate),
                                         where("date", "<=", endDate),
                                         orderBy("date", "asc")
@@ -4034,7 +4019,7 @@
                                 } else {
 
                                     q = query(
-                                        collection(dbRead, "purchasing"),
+                                        collection(db, "purchasing"),
                                         orderBy("date", "desc")
                                     );
                                 }
@@ -4521,7 +4506,7 @@
                                 const recipeSnap =
                                     await getDocs(collection(db, "product_recipes"));
                                 const materialSnap = await getDocs(
-                                    query(collection(dbRead, "materials"), orderBy("code", "asc"))
+                                    query(collection(db, "materials"), orderBy("code", "asc"))
                                 );
 
                                 let html = "";
@@ -4743,7 +4728,7 @@
                                 showPage("forecast_production");
 
                                 const recipeSnap = await getDocs(collection(db, "product_recipes"));
-                                const materialSnap = await getDocs(collection(dbRead, "materials"));
+                                const materialSnap = await getDocs(collection(db, "materials"));
                                 const priceFgSnap = await getDocs(collection(db, "price_fg"));
                                 const q = query(
                                     collection(db, "production_results"),
@@ -6561,7 +6546,7 @@
 
                                 const snap = await getDocs(
                                     query(
-                                        collection(dbRead, "purchasing"),
+                                        collection(db, "purchasing"),
                                         orderBy("date", "asc")
                                     )
                                 );
@@ -6644,7 +6629,7 @@
                                 if (startDate && endDate) {
 
                                     q = query(
-                                        collection(dbRead, "purchasing"),
+                                        collection(db, "purchasing"),
                                         where("date", ">=", startDate),
                                         where("date", "<=", endDate),
                                         orderBy("date", "asc")
@@ -6653,7 +6638,7 @@
                                 } else {
 
                                     q = query(
-                                        collection(dbRead, "purchasing"),
+                                        collection(db, "purchasing"),
                                         orderBy("date", "asc")
                                     );
                                 }
@@ -6785,7 +6770,7 @@
                                     // ================= LOAD DATA =================
                                     const prodSnap = await getDocs(collection(db, "production_results"));
                                     const recipeSnap = await getDocs(collection(db, "product_recipes"));
-                                    const materialSnap = await getDocs(collection(dbRead, "materials"));
+                                    const materialSnap = await getDocs(collection(db, "materials"));
                                     // ================= GROUP FG =================
                                     let fgMap = {};
                                     prodSnap.forEach(docu => {
@@ -7545,7 +7530,7 @@
                                         const json = XLSX.utils.sheet_to_json(sheet);
                                         const materialSnap =
                                             await getDocs(
-                                                collection(dbRead, "materials")
+                                                collection(db, "materials")
                                             );
 
                                         let materialMap = {};
@@ -7627,10 +7612,10 @@
                                     return;
                                 }
                                 try {
-                                    const oldSnap = await getDocs(collection(dbRead, "stock_card"));
+                                    const oldSnap = await getDocs(collection(db, "stock_card"));
                                     for (const docItem of oldSnap.docs) {
                                         await deleteDoc(
-                                            doc(dbRead, "stock_card", docItem.id)
+                                            doc(db, "stock_card", docItem.id)
                                         );
                                     }
 
@@ -7639,7 +7624,7 @@
                                     // ===============================
                                     for (const item of stockAwalExcelData) {
                                         await addDoc(
-                                            collection(dbRead, "stock_card"),
+                                            collection(db, "stock_card"),
                                             {
                                                 ...item,
                                                 type: "OPENING",
@@ -7662,7 +7647,7 @@
                                 try {
                                     const snap = await getDocs(
                                         query(
-                                            collection(dbRead, "stock_card"),
+                                            collection(db, "stock_card"),
                                             orderBy("code", "asc")
                                         )
                                     );
@@ -7738,7 +7723,7 @@
                                         const materialSnap =
                                             await getDocs(
                                                 query(
-                                                    collection(dbRead, "materials"),
+                                                    collection(db, "materials"),
                                                     orderBy("code", "asc")
                                                 )
                                             );
@@ -7834,7 +7819,7 @@
                                 }
                                 for (const item of soExcelData) {
                                     await addDoc(
-                                        collection(dbRead, "stock_opname"),
+                                        collection(db, "stock_opname"),
                                         {
                                             ...item,
                                             createdAt: serverTimestamp()
@@ -7875,7 +7860,7 @@
                                 const month = document.getElementById("filterSOMonth").value;
                                 const year = document.getElementById("filterSOYear").value;
                                 const q = query(
-                                    collection(dbRead, "stock_opname")
+                                    collection(db, "stock_opname")
                                 );
 
                                 const snap = await getDocs(q);
@@ -7950,7 +7935,7 @@
                                 const month = document.getElementById("filterSOMonth").value;
                                 const year = document.getElementById("filterSOYear").value;
                                 const q = query(
-                                    collection(dbRead, "stock_opname")
+                                    collection(db, "stock_opname")
                                 );
 
                                 const snap = await getDocs(q);
@@ -8090,7 +8075,7 @@
                                     const materialSnap =
                                         await getDocs(
                                             query(
-                                                collection(dbRead, "materials"),
+                                                collection(db, "materials"),
                                                 orderBy("code", "asc")
                                             )
                                         );
@@ -8100,7 +8085,7 @@
                                     // =========================
                                     const stockAwalSnap =
                                         await getDocs(
-                                            collection(dbRead, "stock_card")
+                                            collection(db, "stock_card")
                                         );
 
                                     // =========================
@@ -8109,7 +8094,7 @@
                                     let poQuery;
                                     if (start && end) {
                                         poQuery = query(
-                                            collection(dbRead, "purchasing"),
+                                            collection(db, "purchasing"),
                                             where("date", ">=", start),
                                             where("date", "<=", end)
                                         );
@@ -8117,7 +8102,7 @@
                                     } else {
 
                                         poQuery =
-                                            collection(dbRead, "purchasing");
+                                            collection(db, "purchasing");
 
                                     }
 
@@ -8131,13 +8116,13 @@
                                     if (start && end) {
 
                                         produksiQuery = query(
-                                            collection(dbRead, "production_orders"),
+                                            collection(db, "production_orders"),
                                             where("date", ">=", start),
                                             where("date", "<=", end)
                                         );
                                     } else {
                                         produksiQuery =
-                                            collection(dbRead, "production_orders");
+                                            collection(db, "production_orders");
                                     }
                                     const produksiSnap =
                                         await getDocs(produksiQuery);
@@ -8146,25 +8131,25 @@
                                     // =========================
                                     const recipeSnap =
                                         await getDocs(
-                                            collection(dbRead, "product_recipes")
+                                            collection(db, "product_recipes")
                                         );
 
                                     const priceFgSnap =
                                         await getDocs(
-                                            collection(dbRead, "price_fg")
+                                            collection(db, "price_fg")
                                         );
 
                                     let productionResultQuery;
 
                                     if (start && end) {
                                         productionResultQuery = query(
-                                            collection(dbRead, "production_results"),
+                                            collection(db, "production_results"),
                                             where("date", ">=", start),
                                             where("date", "<=", end)
                                         );
                                     } else {
                                         productionResultQuery =
-                                            collection(dbRead, "production_results");
+                                            collection(db, "production_results");
                                     }
 
                                     const productionResultSnap =
@@ -8176,14 +8161,14 @@
                                     let wasteQuery;
                                     if (start && end) {
                                         wasteQuery = query(
-                                            collection(dbRead, "waste_material"),
+                                            collection(db, "waste_material"),
                                             where("date", ">=", start),
                                             where("date", "<=", end)
                                         );
 
                                     } else {
                                         wasteQuery =
-                                            collection(dbRead, "waste_material");
+                                            collection(db, "waste_material");
 
                                     }
                                     const wasteSnap =
@@ -8196,7 +8181,7 @@
                                     if (start && end) {
 
                                         soQuery = query(
-                                            collection(dbRead, "stock_opname"),
+                                            collection(db, "stock_opname"),
                                             where("soDate", ">=", start),
                                             where("soDate", "<=", end)
                                         );
@@ -8204,7 +8189,7 @@
                                     } else {
 
                                         soQuery =
-                                            collection(dbRead, "stock_opname");
+                                            collection(db, "stock_opname");
 
                                     }
                                     const soSnap =
