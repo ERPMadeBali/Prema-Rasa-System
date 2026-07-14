@@ -3683,14 +3683,6 @@
                             }
                             /* ================= PURCHASING ================= */
                             function togglePurchasing() {
-                                /* ========LOCK ACCESS INPUT DATA========== */
-                                const user = auth.currentUser;
-                                if (!user) return;
-                                const username = user.email.split("@")[0].toLowerCase().trim();
-                                if (username !== "user") {
-                                    alert("You do not have access to Master Data!");
-                                    return;
-                                }
                                 const menu = document.getElementById("purchasingSubMenu");
                                 menu.style.display = (menu.style.display === "block") ? "none" : "block";
                             }
