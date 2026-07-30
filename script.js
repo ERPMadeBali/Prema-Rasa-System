@@ -5690,8 +5690,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 
                                 });
                                 document.getElementById("soTable").innerHTML = html;
-                                document.getElementById("soTotalValue").innerHTML =
-                                    "Rp " + grandTotal.toLocaleString();
+                                 document.getElementById("soTotalValue").innerHTML =
+                                "Rp " + grandTotal.toLocaleString("id-ID", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                });
                                 document.getElementById("soTotalData").innerHTML =
                                     totalData.toLocaleString();
 
