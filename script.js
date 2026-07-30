@@ -6175,10 +6175,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
                                     document.getElementById("stockCardTable")
                                         .innerHTML = html;
                                     // TOTAL VALUE
-                                    document.getElementById("stockCardTotalValue")
-                                        .innerHTML =
-                                        "Rp " +
-                                        totalValue.toLocaleString();
+                                    document.getElementById("stockCardTotalValue").innerHTML =
+                                    "Rp " +
+                                    totalValue.toLocaleString("id-ID", {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
                                     // TOTAL DATA
                                     document.getElementById("stockCardTotalData")
                                         .innerHTML =
