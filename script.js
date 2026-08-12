@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-                            import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-                            import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
                             const firebaseConfig = {
                                 apiKey: "AIzaSyAINEugboloQA7jg7PDWMM9GHsMMXwM2Cg",
@@ -5588,32 +5588,112 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
                             }
                             window.readSOExcel = readSOExcel;
 
-                            /* ================= SAVE SO ================= */
-                            async function saveSOData() {
-                                const soDate = document.getElementById("soDate").value;
-
-                                if (!soDate) {
-                                    alert("Pilih tanggal SO");
-                                    return;
-                                }
-                                if (soExcelData.length === 0) {
-                                    alert("Data SO kosong");
-                                    return;
-                                }
-                                for (const item of soExcelData) {
-                                    await addDoc(
-                                        collection(db, "stock_opname"),
-                                        {
-                                            ...item,
-                                            createdAt: serverTimestamp()
-                                        }
-                                    );
-                                }
-
-                                alert("Stock Opname berhasil disimpan");
-                                loadSOData();
-                            }
-                            window.saveSOData = saveSOData;
+                            /* ================= SAVE SO DATA ================= */
+                          async function saveSOData() {
+                              const soDate = document.getElementById("soDate").value;
+              
+                              if (!soDate) {
+                                  alert("Pilih tanggal SO");
+                                  return;
+                              }
+              
+                              if (soExcelData.length === 0) {
+                                  alert("Data SO kosong");
+                                  return;
+                              }
+              
+                              try {
+              
+                                  // CEK DATA LAMA
+                                  const q = query(
+                                      collection(db, "stock_opname"),
+                                      where("soDate", "==", soDate)
+                                  );
+              
+                                  const oldSnap = await getDocs(q);
+                                  // JIKA ADA DATA LAMA
+                                  if (!oldSnap.empty) {
+              
+                                      const ok = confirm(
+                                          `Data tanggal ${soDate} sudah ada (${oldSnap.size} data).\n\n` +
+                                          `Klik OK untuk mengganti data lama.`
+                                      );
+              
+                                      if (!ok) return;
+              
+                                      // HAPUS SATU PERSATU
+                                      for (const d of oldSnap.docs) {
+                                          await deleteDoc(d.ref);
+                                      }
+                                  }
+              
+                                  // SIMPAN DATA BARU SATU PERSATU
+                                  for (const item of soExcelData) {
+                                      await addDoc(collection(db, "stock_opname"), {
+                                          code: item.code,
+                                          name: item.name,
+                                          unit: item.unit,
+                                          weight: Number(item.weight),
+                                          average: Number(item.average),
+                                          value: Number(item.value),
+                                          soDate: soDate,
+                                          createdAt: serverTimestamp()
+                                      });
+              
+                                  }
+              
+                                  alert(`Berhasil simpan ${soExcelData.length} data SO`);
+                                  await loadSOData();
+                              } catch (err) {
+              
+                                  console.error(err);
+                                  alert("Gagal simpan data: " + err.message);
+                              }
+                          }
+              
+                          window.saveSOData = saveSOData;
+              
+                          /* ================= DELETE CURRENT BATCH ================= */
+                          async function deleteCurrentSOBatch() {
+                              const soDate = document.getElementById("soDate").value;
+              
+                              if (!soDate) {
+                                  alert("Pilih tanggal SO terlebih dahulu");
+                                  return;
+                              }
+              
+                              const ok = confirm(`Hapus semua data tanggal ${soDate}?`);
+                              if (!ok) return;
+              
+                              try {
+              
+                                  const q = query(
+                                      collection(db, "stock_opname"),
+                                      where("soDate", "==", soDate)
+                                  );
+              
+                                  const snap = await getDocs(q);
+                                  if (snap.empty) {
+                                      alert("Data tidak ditemukan");
+                                      return;
+                                  }
+              
+                                  let total = 0;
+                                  for (const d of snap.docs) {
+                                      await deleteDoc(d.ref);
+                                      total++;
+                                  }
+              
+                                  alert(`Berhasil menghapus ${total} data`);
+                                  await loadSOData();
+              
+                              } catch (err) {
+                                  console.error(err);
+                                  alert("Gagal hapus data: " + err.message);
+                              }
+                          }
+              
+                          window.deleteCurrentSOBatch = deleteCurrentSOBatch;
 
                             /* ================= LOAD YEAR ================= */
                             function loadSOYears() {
