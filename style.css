@@ -96,8 +96,10 @@
                 color: #a7f3d0;
                 font-size: 24px;
                 margin-bottom: 30px;
-                font-weight: 400;
+                font-weight: 700;
                 letter-spacing: .3px;
+                text-shadow:
+                0 0 20px rgba(250, 204, 21, 0.15);
                 
             }
             .sidebar a {
@@ -295,7 +297,7 @@
                 position: relative;
                 z-index: 1;
                 color: #f0fdf4;
-                font-size: 18px;
+                font-size: 24px;
                 font-weight: 800;
             }
 
