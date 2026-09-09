@@ -94,10 +94,9 @@
                 text-align: center;
                 color: #a7f3d0;
                 margin-bottom: 30px;
-                font-size: 18px;
-                font-weight: 300;
+                font-weight: 400;
                 letter-spacing: .3px;
-                font-family: inherit;
+                
             }
             .sidebar a {
                 position: relative;
