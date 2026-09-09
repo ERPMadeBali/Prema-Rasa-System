@@ -290,10 +290,11 @@
                 box-shadow:
                     0 16px 38px rgba(6, 95, 70, .25);
             }
-            .stat-card h6 {
+            .stat-card h2 {
                 position: relative;
                 z-index: 1;
                 color: #f0fdf4;
+                font-size: 18px;
                 font-weight: 800;
             }
 
