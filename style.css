@@ -37,10 +37,11 @@
                 margin: 0;
                 font-family:
                     "Segoe UI",
+                    -apple-system,
+                    BlinkMacSystemFont,
                     Inter,
                     Arial,
                     sans-serif;
-
                 background:
                     linear-gradient(135deg,
                         #f8fbf9 0%,
