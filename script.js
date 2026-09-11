@@ -1527,17 +1527,17 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                 const supplierSnap = await getDocs(
                                     query(
                                         collection(db, "suppliers"),
-                                        orderBy("code", "asc")
+                                        orderBy("name", "asc")
                                     )
                                 );
 
                                 let supplierHtml = `<option value="">Select Supplier</option>`;
                                 supplierSnap.forEach(d => {
                                     supplierHtml += `
-            <option value="${d.data().name}">
-                ${d.data().name}
-            </option>
-        `;
+                                    <option value="${d.data().name}">
+                                        ${d.data().name}
+                                    </option>
+                                `;
                                 });
 
                                 document.getElementById("purchaseSupplier").innerHTML = supplierHtml;
