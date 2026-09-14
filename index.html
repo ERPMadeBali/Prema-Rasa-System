@@ -1889,13 +1889,46 @@
                             <!-- FILTER -->
                             <div class="row mb-3">
                                 <div class="col-md-3">
-                                    <label>Last Periode</label>
-                                    <input type="date" id="stockCardStart" class="form-control">
+                                    <label>Month</label>
+                                    <select id="stockCardMonth" class="form-control">
+                                        <option value="">Select Month</option>
+                                        <option value="01">January</option>
+                                        <option value="02">February</option>
+                                        <option value="03">March</option>
+                                        <option value="04">April</option>
+                                        <option value="05">May</option>
+                                        <option value="06">June</option>
+                                        <option value="07">July</option>
+                                        <option value="08">August</option>
+                                        <option value="09">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <label>New Periode</label>
-                                    <input type="date" id="stockCardEnd" class="form-control">
+                                <!-- YEAR -->
+                                <div class="col-md-2">
+                                    <label>Year</label>
+                                    <select id="stockCardYear" class="form-control">
+                                        <option value="">Select Year</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2027">2028</option>
+                                        <option value="2027">2029</option>
+                                        <option value="2027">2030</option>
+                                        <option value="2027">2031</option>
+                                        <option value="2027">2032</option>
+                                        <option value="2027">2033</option>
+                                        <option value="2027">2034</option>
+                                        <option value="2027">2035</option>
+                                        <option value="2027">2036</option>
+                                        <option value="2027">2037</option>
+                                        <option value="2027">2038</option>
+                                        <option value="2027">2039</option>
+                                        <option value="2027">2040</option>
+                                    </select>
                                 </div>
+                                <!-- VIEW -->
                                 <div class="col-md-2 d-flex align-items-end">
                                     <button class="btn btn-success w-100" onclick="loadStockCardWarehouse()">
                                         View Data
