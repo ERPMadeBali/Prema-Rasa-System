@@ -6709,7 +6709,6 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                         - qtyProduksi
                                         - qtyWaste;
 
-
                                     // =================================================
                                     // NEW SO
                                     //
@@ -6719,12 +6718,8 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                     // FILTER:
                                     //    SO terakhir pada bulan filter
                                     // =================================================
-
                                     let qtySOAkhir = 0;
-
-
                                     if (isFiltered) {
-
                                         qtySOAkhir =
                                             newSOMap[code]?.weight || 0;
 
@@ -6735,15 +6730,13 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
 
                                     }
 
-
                                     // =================================================
                                     // DIFFERENCE
                                     // =================================================
                                     const qtySelisih =
-                                        qtyStockAkhir
+                                        qtySOAkhir
                                         -
-                                        qtySOAkhir;
-
+                                        qtyStockAkhir;
 
                                     // =================================================
                                     // VALUE
@@ -6758,11 +6751,9 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                     // =================================================
                                     // GENERATE HTML
                                     // =================================================
-
                                     html += `
 
                 <tr>
-
                     <td>
                         ${mat.code}
                     </td>
