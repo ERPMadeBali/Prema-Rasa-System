@@ -7055,10 +7055,13 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                             // =========================
                             // SAVE PDF
                             // =========================
-
-                            doc.save(
-                                "Stock-Card-Warehouse.pdf"
-                            );
+                            let fileName = "Stock-Card-Warehouse";
+                            if (month && year) {
+                                fileName += `-${monthNames[month]}-${year}`;
+                            }
+                            
+                            fileName += ".pdf";
+                            doc.save(fileName);
 
                         }
 
