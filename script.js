@@ -6940,7 +6940,7 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                             // =========================
                             doc.setFontSize(16);
                             doc.text(
-                                "STOCK CARD BAHAN BAKU WAREHOUSE",
+                                "STOCK CARD BAHAN BAKU WAREHOUSE PREMA RASA",
                                 40,
                                 40
                             );
