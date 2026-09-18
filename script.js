@@ -4244,8 +4244,13 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                 document.getElementById("cogsReportArea").style.display =
                                     type === "cogs" ? "block" : "none";
 
+                                document.getElementById("profitLossReportArea").style.display =
+                                type === "profitlossreport" ? "block" : "none";
+
                                 document.getElementById("generalReportArea").style.display =
-                                    (type === "production" || type === "cogs")
+                                    (type === "production" ||
+                                        type === "cogs" ||
+                                        type === "profitlossreport")
                                         ? "none"
                                         : "block";
 
@@ -4267,7 +4272,7 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
 
                                 }
 
-                                else if (type === "profitloss") {
+                                else if (type === "profitlossreport") {
                                     title.innerHTML = "Profit & Loss Report";
                                 }
 
@@ -4281,6 +4286,7 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                 // reset table
                                 document.getElementById("reportHead").innerHTML = "";
                                 document.getElementById("reportBody").innerHTML = "";
+                                document.getElementById("profitLossTableWrapper").style.display = "none";
                             }
 
                             function loadSelectedReport() {
@@ -4293,8 +4299,8 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                 else if (currentReport === "cogs") {
                                     loadCOGSReport();
                                 }
-                                else if (currentReport === "profitloss") {
-                                    loadProfitLossReport();
+                                else if (currentReport === "profitlossreport") {
+                                loadProfitLossReport();
                                 }
                             }
                             async function exportReportPDF() {
@@ -4310,6 +4316,9 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                 if (currentReport === "profitloss") {
                                     return exportProfitLossPDF();
                                 }
+                                if (currentReport === "profitlossreport") {
+                                  return exportProfitLossPDF();
+                              }
                             }
 
                             window.exportReportPDF = exportReportPDF;
@@ -5272,10 +5281,299 @@ import { getFirestore, collection, onSnapshot, addDoc, getDocs, updateDoc, delet
                                 );
                             }
 
-                            function loadProfitLossReport() {
-                                document.getElementById("reportHead").innerHTML = "<tr><th>Profit & Loss Report</th></tr>";
-                                document.getElementById("reportBody").innerHTML = "<tr><td>Coming Soon</td></tr>";
+                            
+                        /* =======================================================
+                            LOAD PROFIT LOSS REPORT DATA
+                           ========================================================= */
+                        function formatTanggalIndonesia(date) {
+                            if (!date) return "";
+                            const parts = date.split("-");
+                            if (parts.length !== 3) return date;
+                            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+                        }
+
+                        async function loadProfitLossReport() {
+                            const start = document.getElementById("reportStartDate").value;
+                            const end = document.getElementById("reportEndDate").value;
+
+                            if (!start || !end) {
+                                alert("Silahkan Lakukan select Start Date & End Date dahulu, kemudian click Load data...!!!");
+                                return;
                             }
+
+                            /* ================= LOAD DATA ================= */
+                            const salesSnap = await getDocs(collection(db, "sales"));
+                            const prodSnap = await getDocs(collection(db, "production_results"));
+                            const recipeSnap = await getDocs(collection(db, "product_recipes"));
+                            const materialSnap = await getDocs(collection(db, "materials"));
+                            const wasteMaterialSnap = await getDocs(collection(db, "waste_material"));
+                            const wasteFGSnap = await getDocs(collection(db, "waste_fg"));
+
+                            /* ================= SALES ================= */
+                            let totalSales = 0;
+                            salesSnap.forEach(docu => {
+                                const data = docu.data();
+                                if (data.date < start || data.date > end) return;
+                                totalSales += Number(data.value || 0);
+
+                            });
+
+                            /* ================= HPP ================= */
+                            let totalCOGS = 0;
+                            let fgMap = {};
+
+                            prodSnap.forEach(prodDoc => {
+                                const prod = prodDoc.data();
+                                if (prod.date < start || prod.date > end) return;
+
+                                if (!fgMap[prod.productCode]) {
+
+                                    fgMap[prod.productCode] = {
+                                        qty: 0
+                                    };
+                                }
+                                fgMap[prod.productCode].qty += Number(prod.fgPcs || 0);
+
+                            });
+
+                            for (const productCode in fgMap) {
+                                const recipes = recipeSnap.docs
+                                    .map(d => d.data())
+                                    .filter(r => r.productCode === productCode);
+                                for (const recipe of recipes) {
+                                    const material = materialSnap.docs
+                                        .map(d => d.data())
+                                        .find(m =>
+                                            m.name.toLowerCase().trim() ===
+                                            recipe.material.toLowerCase().trim()
+                                        );
+
+                                    if (!material) continue;
+                                    const usedQty =
+                                        Number(recipe.qty || 0) *
+                                        Number(fgMap[productCode].qty || 0);
+                                    const totalValue =
+                                        usedQty *
+                                        Number(material.average || 0);
+                                    totalCOGS += totalValue;
+                                }
+                            }
+                            totalCOGS *= 1.01;
+
+                            /* ================= PRODUCTION COST ================= */
+                            let totalOverhead = 0;
+                            const costSnap =
+                                await getDocs(collection(db, "production_cost"));
+
+                            costSnap.forEach(docu => {
+                                const data = docu.data();
+                                if (data.date < start || data.date > end) return;
+                                totalOverhead += Number(data.value || 0);
+
+                            });
+                            /* ================= WASTE MATERIAL ================= */
+                            let totalWasteMaterial = 0;
+                            wasteMaterialSnap.forEach(docu => {
+                                const data = docu.data();
+                                if (data.date < start || data.date > end) return;
+                                totalWasteMaterial += Number(data.price || 0);
+
+                            });
+                            /* ================= WASTE FG ================= */
+                            let totalWasteFG = 0;
+                            wasteFGSnap.forEach(docu => {
+                                const waste = docu.data();
+                                if (waste.date < start || waste.date > end) return;
+
+                                const recipes = recipeSnap.docs
+                                    .map(d => d.data())
+                                    .filter(r => r.productCode === waste.productCode);
+
+                                recipes.forEach(recipe => {
+                                    const material = materialSnap.docs
+                                        .map(d => d.data())
+                                        .find(m =>
+                                            m.name.toLowerCase().trim() ===
+                                            recipe.material.toLowerCase().trim()
+                                        );
+
+                                    if (!material) return;
+                                    const totalValue =
+                                        Number(recipe.qty || 0) *
+                                        Number(waste.qty || 0) *
+                                        Number(material.average || 0);
+
+                                    totalWasteFG += totalValue;
+                                });
+                            });
+
+                            /* ================= PROFIT LOSS ================= */
+                            const grossProfit =
+                                totalSales - totalCOGS;
+
+                            const totalExpense =
+                                totalOverhead +
+                                totalWasteMaterial +
+                                totalWasteFG;
+
+                            const netProfit =
+                                grossProfit - totalExpense;
+                            /* ================= UPDATE PROFIT LOSS TABLE ================= */
+                            const rupiah = (value) =>
+                                `Rp ${Number(value).toLocaleString("id-ID", {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })}`;
+
+                            document.getElementById("profitLossResult").innerHTML = `
+                            <div class="table-responsive">
+                            <table class="table table-dark table-striped table-hover align-middle">
+                            <tbody>
+                            <tr>
+                                <td width="65%">Periode</td>
+                                <td class="text-end">
+                                    ${formatTanggalIndonesia(start)} - ${formatTanggalIndonesia(end)}
+                                </td>
+                            </tr>
+                            <tr class="table-warning">
+                                <th colspan="2">Revenue</th>
+                            </tr>
+                            <tr>
+                                <td>Sales Revenue</td>
+                                <td class="text-end">${rupiah(totalSales)}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Revenue</strong></td>
+                                <td class="text-end">
+                                    <strong>${rupiah(totalSales)}</strong>
+                                </td>
+                            </tr>
+                            <tr class="table-warning">
+                                <th colspan="2">Cost of Goods Sold</th>
+                            </tr>
+                            <tr>
+                                <td>COGS</td>
+                                <td class="text-end">${rupiah(totalCOGS)}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gross Profit</strong></td>
+                                <td class="text-end">
+                                    <strong>${rupiah(grossProfit)}</strong>
+                                </td>
+                            </tr>
+                            <tr class="table-warning">
+                                <th colspan="2">Operating Expense</th>
+                            </tr>
+                            <tr>
+                                <td>Production Cost</td>
+                                <td class="text-end">${rupiah(totalOverhead)}</td>
+                            </tr>
+                            <tr>
+                                <td>Waste Material</td>
+                                <td class="text-end">${rupiah(totalWasteMaterial)}</td>
+                            </tr>
+                            <tr>
+                                <td>Waste FG</td>
+                                <td class="text-end">${rupiah(totalWasteFG)}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Expense</strong></td>
+                                <td class="text-end">
+                                    <strong>${rupiah(totalExpense)}</strong>
+                                </td>
+                            </tr>
+                            <tr class="${netProfit >= 0 ? "table-success" : "table-danger"}">
+                                <th style="font-size:18px;">NET PROFIT</th>
+                                <th class="text-end" style="font-size:18px;">
+                                    ${rupiah(netProfit)}
+                                </th>
+                            </tr>
+                            </tbody>
+                            </table>
+                            </div>
+                            `;
+                        }
+
+                        /* =========================================================
+                         EXPORT PROFIT LOSS PDF
+                         ========================================================= */
+                        async function exportProfitLossPDF() {
+                            const table = document.querySelector("#profitLossResult table");
+                            if (!table) {
+                                alert("Silahkan Load Data Profit & Loss terlebih dahulu");
+                                return;
+                            }
+                            const start =
+                                document.getElementById("reportStartDate").value;
+                            const end =
+                                document.getElementById("reportEndDate").value;
+                            const {jsPDF} = window.jspdf;
+                            const pdf =
+                                new jsPDF(
+                                    "p",
+                                    "mm",
+                                    "a4"
+                                );
+
+                            pdf.setFontSize(16);
+                            pdf.text(
+                                "PROFIT & LOSS REPORT",
+                                105,
+                                15,
+                                {
+                                    align: "center"
+                                }
+                            );
+                            pdf.setFontSize(14);
+                            pdf.text(
+                                "PREMA RASA BALI",
+                                105,
+                                23,
+                                {
+                                    align: "center"
+                                }
+                            );
+                            pdf.setFontSize(10);
+                            pdf.text(
+                                `Periode : ${formatTanggalIndonesia(start)} - ${formatTanggalIndonesia(end)}`,
+                                105,
+                                30,
+                                {
+                                    align: "center"
+                                }
+                            );
+                            pdf.autoTable({
+                                html: "#profitLossResult table",
+                                startY: 38,
+                                theme: "grid",
+                                styles: {
+                                    fontSize: 10,
+                                    cellPadding: 3
+                                },
+                                headStyles: {
+                                    fillColor: [
+                                        33,
+                                        37,
+                                        41
+                                    ],
+
+                                    textColor: 255
+
+                                },
+                                columnStyles: {
+                                    0: {
+                                        halign: "left"
+                                    },
+
+                                    1: {
+                                        halign: "right"
+                                    }
+                                }
+                            });
+                            pdf.save(
+                                `Profit_Loss_Report_${start}_${end}.pdf`
+                            );
+                        }
 
                             /* =================================================== */
                             /* ============= STOCK CARD WAREHOUSE =============== */
